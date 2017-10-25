@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<smartRail>
+    <lane number="1">
+        <station>Albuquerque</station>
+
+        <track>1</track>
+        <track>2</track>
+        <track>3</track>
+        <track>4</track>
+        <track>5</track>
+        <track>6</track>
+        <track>7</track>
+        <track>8</track>
+        <track>9</track>
+        <track>10</track>
+
+        <station>Atlantis</station>
+    </lane>
+
+    <lane number="2">
+        <station>Miami</station>
+
+        <track>1</track>
+        <track>2</track>
+        <track>3</track>
+        <track>4</track>
+        <track>5</track>
+        <track>6</track>
+        <track>7</track>
+        <track>8</track>
+        <track>9</track>
+        <track>10</track>
+
+        <station>Paris</station>
+    </lane>
+</smartRail>
