@@ -1,6 +1,6 @@
 package sample;
 
-//Welcome Akash!
+//Hello
 
 public class Track extends Component implements Runnable{
   Component left;
