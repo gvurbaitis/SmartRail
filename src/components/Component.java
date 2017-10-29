@@ -5,7 +5,7 @@ import java.util.List;
 
 public abstract class Component implements Runnable
 {
-    private List<Message> msgQueue;
+    public List<Message> msgQueue;
     private Component next;
     private Component previous;
     private boolean shutdown;

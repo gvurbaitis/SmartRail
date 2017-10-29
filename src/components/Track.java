@@ -8,7 +8,9 @@ public class Track extends Component implements Runnable
     @Override
     public void run()
     {
-
+         if(this.msgQueue.get(0).getDirection() == 1){
+             
+         }
     }
 
     public Component getNeighbor(int direction)
