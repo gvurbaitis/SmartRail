@@ -1,9 +1,15 @@
 package components;
 
-public class Track extends Component
+public class Track extends Component implements Runnable
 {
     private Component next; // reference to the track to the right
     private Component previous; // reference to the track to the left
+
+    @Override
+    public void run()
+    {
+
+    }
 
     public Component getNeighbor(int direction)
     {
