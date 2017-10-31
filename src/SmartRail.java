@@ -22,6 +22,7 @@ public class SmartRail extends Application
       Station atlantis = new Station("Atlantis");
       albuquerque.setOriginator(track1);
       albuquerque.setTrackSide(false);
+      track1.setOccupied(true);
       track1.setPrevious(albuquerque);
       track1.setNext(track2);
       track2.setPrevious(track1);
