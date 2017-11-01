@@ -1,11 +1,12 @@
 package components;
 
-public class Train extends Component implements Runnable
+public class Train extends Component
 {
     private Track currentTrack;
     private int direction; // -1 is left, 1 is right
     private boolean moving = false;
 
+    /**
     @Override
     public void run()
     {
@@ -45,12 +46,17 @@ public class Train extends Component implements Runnable
 //            }
         }
 
-    }
+    }*/
 
     public Train(Track currentTrack)
     {
         this.currentTrack = currentTrack;
         currentTrack.setOccupied(true);
+    }
+
+    void update()
+    {
+
     }
 
     public Track getCurrentTrack() { return currentTrack; }

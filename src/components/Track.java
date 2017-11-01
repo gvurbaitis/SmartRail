@@ -1,12 +1,10 @@
 package components;
 
-import sun.jvm.hotspot.gc_implementation.g1.HeapRegion;
-
-public class Track extends Component implements Runnable
+public class Track extends Component
 {
-    public Component next; // reference to the track to the right
-    public Component previous; // reference to the track to the left
     private boolean occupied;
+
+    /**
     @Override
     public void run()
     {
@@ -36,35 +34,13 @@ public class Track extends Component implements Runnable
                     }
             }
         }
-    }
+    }*/
 
-    public Component getNeighbor(int direction)
+    void update()
     {
-        if (direction == 1) return this.next;
-        else return this.previous;
+        justWait();
     }
 
     public boolean getOccupied(){return occupied;}
-
     public void setOccupied(boolean occupied){this.occupied = occupied;}
-
-    public Component getNext()
-    {
-        return next;
-    }
-
-    public void setNext(Component next)
-    {
-        this.next = next;
-    }
-
-    public Component getPrevious()
-    {
-        return previous;
-    }
-
-    public void setPrevious(Component previous)
-    {
-        this.previous = previous;
-    }
 }

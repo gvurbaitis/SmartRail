@@ -1,12 +1,12 @@
 package components;
 
-public class Station extends Component implements Runnable
+public class Station extends Component
 {
-    private String city; // name of the city that the station is located at
     private Track originator; // the initial track connected to the station
     private boolean trackOnLeft;
     private boolean go;
 
+    /**
     @Override
     public void run()
     {
@@ -55,11 +55,11 @@ public class Station extends Component implements Runnable
                 }
             }
         }
-    }
+    }*/
 
-    public Station(String city)
+    void update()
     {
-        this.city = city;
+        justWait();
     }
 
     public void setOriginator(Track originator)
