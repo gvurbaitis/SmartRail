@@ -86,12 +86,14 @@ class Coordinator
             {
                 Track track = tracks.get(0);
                 station.setOriginator(track);
+                station.setRight(track);
                 track.setLeft(station);
             }
             else
             {
                 Track track = tracks.get(tracks.size() - 1);
                 station.setOriginator(track);
+                station.setLeft(track);
                 track.setRight(station);
             }
         }
