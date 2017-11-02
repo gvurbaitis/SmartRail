@@ -41,7 +41,13 @@ public class Train extends Component
             while (!(currentTrack.getNeighbor(1) instanceof Station))
             {
                 System.out.println("On " + currentTrack.getName());
-                currentTrack = (Track) currentTrack.getNeighbor(1);
+                currentTrack.setTrain(null);
+
+                if(currentTrack.getName().equals(getMsg().getPath().get(0)))
+                {
+                    currentTrack = (Track) currentTrack.getNeighbor(1);
+                    getMsg().pop();
+                }
 
                 try
                 {
