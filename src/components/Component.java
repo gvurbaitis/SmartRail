@@ -3,6 +3,7 @@ package components;
 public abstract class Component implements Runnable
 {
     private Message msg;
+    private String name;
     private Component right;
     private Component left;
     private boolean shutdown;
@@ -11,10 +12,11 @@ public abstract class Component implements Runnable
     public void run()
     {
         shutdown = false;
+        name = Thread.currentThread().getName();
 
         while (!shutdown)
         {
-            //System.out.println(Thread.currentThread().getName() + " has started!");
+            //System.out.println(getName() + " has started!");
             update();
         }
     }
@@ -31,7 +33,7 @@ public abstract class Component implements Runnable
     {
         try
         {
-            //System.out.println(Thread.currentThread().getName() + " is waiting.");
+            //System.out.println(getName() + " is waiting.");
             wait();
         }
         catch (InterruptedException e)
@@ -40,30 +42,13 @@ public abstract class Component implements Runnable
         }
     }
 
-    boolean processMessage()
-    {
-        String destination = msg.getDestination();
-        Component neighbor = getNeighbor(msg.getDirection());
-
-        if (Thread.currentThread().getName().equals(destination))
-        {
-            System.out.println("Arrived in " + destination);
-            System.out.println();
-            return true;
-        }
-        else
-        {
-            if (neighbor != null) neighbor.accept(msg);
-            return false;
-        }
-    }
-
-    private Component getNeighbor(int direction)
+    Component getNeighbor(int direction)
     {
         if (direction == 1) return right;
         else return left;
     }
 
+    String getName() { return this.name; }
     public Component getRight()
     {
         return right;
@@ -88,4 +73,5 @@ public abstract class Component implements Runnable
     {
         this.shutdown = true;
     }
+
 }

@@ -54,7 +54,7 @@ class Coordinator
 
         for (char c : laneConfig.toCharArray())
         {
-            if (c == 's')
+            if (c == 'S')
             {
                 String city;
                 if (stationCount == 0) city = "Albuquerque";

@@ -14,13 +14,9 @@ public class Train extends Component
     {
         findRoute();
         justWait();
-
-        // temporary, for testing
-        if (Thread.currentThread().getName().equals(getMsg().getDestination()))
-        {
-            System.out.println(Thread.currentThread().getName() + " received confirmation!");
-        }
+        move();
         shutdown(); // temporarily for testing
+        System.exit(0); // for now when train reaches destination kill simulation
     }
 
     private void findRoute()
@@ -28,7 +24,49 @@ public class Train extends Component
         Message msg = new Message();
         msg.setDestination("Atlantis");
         msg.setDirection(1);
+        currentTrack.setTrain(this);
 
         currentTrack.accept(msg);
+    }
+
+    private void move()
+    {
+        if (isRouteConfirmed())
+        {
+            System.out.println("The path is: " + getMsg().getPath());
+            System.out.println();
+            System.out.println("moving...");
+
+            // temporary stop condition
+            while (!(currentTrack.getNeighbor(1) instanceof Station))
+            {
+                System.out.println("On " + currentTrack.getName());
+                currentTrack = (Track) currentTrack.getNeighbor(1);
+
+                try
+                {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            System.out.println("On " + currentTrack.getName());
+            System.out.println("Arrived in " + currentTrack.getNeighbor(1).getName());
+        }
+    }
+
+    private boolean isRouteConfirmed()
+    {
+        if (getName().equals(getMsg().getDestination()))
+        {
+            System.out.println(getName() + " received confirmation!");
+            return true;
+        }
+        else
+        {
+            System.out.println(getName() + " cannot find path!");
+            return false;
+        }
     }
 }
