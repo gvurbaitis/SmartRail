@@ -8,7 +8,6 @@ public class Train extends Component
     public Train(Track currentTrack)
     {
         this.currentTrack = currentTrack;
-        currentTrack.setOccupied(true);
     }
 
     void update()
