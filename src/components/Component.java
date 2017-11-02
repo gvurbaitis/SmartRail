@@ -14,30 +14,44 @@ public abstract class Component implements Runnable
 
         while (!shutdown)
         {
-            System.out.println(Thread.currentThread().getName() + " has started!");
+            //System.out.println(Thread.currentThread().getName() + " has started!");
             update();
         }
     }
 
     abstract void update();
 
-    public synchronized void accept(Message msg)
+    synchronized void accept(Message msg)
     {
         this.msg = msg;
-        System.out.println(super.getClass()+"direction "+msg.getDirection()+"destination "+msg.getDestination());
-        this.notify();
+        notify();
     }
 
     synchronized void justWait()
     {
         try
         {
-            System.out.println(Thread.currentThread().getName() + " is waiting.");
-            this.wait();
+            //System.out.println(Thread.currentThread().getName() + " is waiting.");
+            wait();
         }
         catch (InterruptedException e)
         {
             e.printStackTrace();
+        }
+    }
+
+    void processMessage()
+    {
+        String destination = msg.getDestination();
+
+        if (Thread.currentThread().getName().equals(destination))
+        {
+            System.out.println("Arrived in " + destination);
+            System.exit(0); // temporary for testing
+        }
+        else
+        {
+            right.accept(msg);
         }
     }
 
@@ -56,5 +70,9 @@ public abstract class Component implements Runnable
     public void setLeft(Component left)
     {
         this.left = left;
+    }
+    void shutdown()
+    {
+        this.shutdown = true;
     }
 }

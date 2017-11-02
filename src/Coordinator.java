@@ -27,6 +27,7 @@ class Coordinator
         processConfigFile();
         initStations();
         initTracks();
+        initTestTrain(); // test train for first version :D
         startThreads();
     }
 
@@ -105,6 +106,12 @@ class Coordinator
             if (track.getLeft() == null) track.setLeft(tracks.get(i - 1));
             if (track.getRight() == null) track.setRight(tracks.get(i + 1));
         }
+    }
+
+    private void initTestTrain()
+    {
+        Train train = new Train(tracks.get(0));
+        threads.add(new Thread(train, "Train"));
     }
 
     private void startThreads()
