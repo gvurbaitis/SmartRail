@@ -1,4 +1,6 @@
 import components.*;
+import display.Display;
+import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,13 +11,15 @@ import java.util.Scanner;
 
 class Coordinator
 {
+    private Stage window;
     private String laneConfig;
     private List<Station> stations;
     private List<Track> tracks;
     private List<Thread> threads;
 
-    Coordinator()
+    Coordinator(Stage window)
     {
+        this.window = window;
         stations = new ArrayList<>();
         tracks = new ArrayList<>();
         threads = new ArrayList<>();
@@ -24,6 +28,7 @@ class Coordinator
     void initSimulation()
     {
         readConfigFile();
+        initDisplay(); // initialize the display config (everything except the train :D)
         processConfigFile();
         initStations();
         initTracks();
@@ -45,6 +50,13 @@ class Coordinator
         {
             e.printStackTrace();
         }
+    }
+
+    private void initDisplay()
+    {
+        Display display = new Display(window, laneConfig);
+        display.initialize();
+        display.drawConfig();
     }
 
     private void processConfigFile()

@@ -11,7 +11,7 @@ public class SmartRail extends Application
     @Override
     public void start(Stage primaryStage) throws Exception
     {
-        Coordinator coordinator = new Coordinator();
+        Coordinator coordinator = new Coordinator(primaryStage);
         coordinator.initSimulation();
     }
 }
