@@ -88,7 +88,7 @@ public class Train extends Component
     {
         try
         {
-            Thread.sleep(400);
+            Thread.sleep(150);
         }
         catch (InterruptedException e)
         {

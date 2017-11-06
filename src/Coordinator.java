@@ -4,7 +4,6 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -45,13 +44,13 @@ class Coordinator
     {
         try
         {
-            File file = new File(this.getClass().getClassLoader().getResource("config1").toURI());
+            File file = new File("file:../../resources/config");
             Scanner sc = new Scanner(file);
             this.laneConfig = sc.nextLine();
             System.out.println(laneConfig);
             sc.close();
         }
-        catch (URISyntaxException | FileNotFoundException e)
+        catch (FileNotFoundException e)
         {
             e.printStackTrace();
         }

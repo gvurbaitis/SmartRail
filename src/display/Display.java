@@ -9,7 +9,9 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.stage.Stage;
 import javafx.scene.shape.Rectangle;
 
@@ -51,8 +53,8 @@ public class Display
 
     public void drawConfig()
     {
-        double x = 50;
-        double y = 50;
+        double x = 30;
+        double y = 30;
 
         for (Component c : components)
         {
@@ -61,13 +63,13 @@ public class Display
                 c.setX(x);
                 c.setY(y);
                 drawStation(x, y);
-                x += 40;
+                x += 60;
             }
             if (c instanceof Track)
             {
                 c.setX(x);
-                c.setY(y);
-                drawTrack(x, y);
+                c.setY(y + 15);
+                drawTrack(x, y + 15);
                 x += 40;
             }
         }
@@ -78,15 +80,21 @@ public class Display
 
     private void drawStation(double x, double y)
     {
-        Rectangle station = new Rectangle(x, y, 30, 20);
-        station.setFill(Color.BLUE);
+        Rectangle station = new Rectangle(x, y, 60, 60);
+        Image img = new Image("file:../../resources/station.png", false);
+        ImagePattern imagePattern = new ImagePattern(img);
+        station.setFill(imagePattern);
+
         root.getChildren().add(station);
     }
 
     private void drawTrack(double x, double y)
     {
-        Rectangle track = new Rectangle(x, y, 30, 20);
-        track.setFill(Color.BLACK);
+        Rectangle track = new Rectangle(x, y, 40, 30);
+        Image img = new Image("file:../../resources/track.png", false);
+        ImagePattern imagePattern = new ImagePattern(img);
+        track.setFill(imagePattern);
+
         root.getChildren().add(track);
     }
 
@@ -94,8 +102,11 @@ public class Display
     {
         if (trainRect == null)
         {
-            trainRect = new Rectangle(x, y, 30, 20);
-            trainRect.setFill(Color.RED);
+            trainRect = new Rectangle(x, y, 50, 40);
+            Image img = new Image("file:../../resources/train.png", false);
+            ImagePattern imagePattern = new ImagePattern(img);
+            trainRect.setFill(imagePattern);
+
             root.getChildren().add(trainRect);
         }
         else
@@ -110,7 +121,7 @@ public class Display
         @Override
         public void handle(long now)
         {
-            drawTrain(train.getCurrentTrack().getX(), train.getCurrentTrack().getY());
+            drawTrain(train.getCurrentTrack().getX(), train.getCurrentTrack().getY() - 15);
         }
     }
 }
