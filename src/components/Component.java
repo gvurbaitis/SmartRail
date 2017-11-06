@@ -7,6 +7,7 @@ public abstract class Component implements Runnable
     private Component right;
     private Component left;
     private boolean shutdown;
+    private double x, y;
 
     @Override
     public void run()
@@ -49,6 +50,15 @@ public abstract class Component implements Runnable
     }
 
     String getName() { return this.name; }
+    Message getMsg()
+    {
+        return msg;
+    }
+    void shutdown()
+    {
+        this.shutdown = true;
+    }
+
     public Component getRight()
     {
         return right;
@@ -65,13 +75,9 @@ public abstract class Component implements Runnable
     {
         this.left = left;
     }
-    Message getMsg()
-    {
-        return msg;
-    }
-    void shutdown()
-    {
-        this.shutdown = true;
-    }
 
+    public double getX() { return x; }
+    public void setX(double x) { this.x = x; }
+    public double getY() { return y; }
+    public void setY(double y) { this.y = y; }
 }

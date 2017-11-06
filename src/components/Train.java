@@ -45,16 +45,10 @@ public class Train extends Component
 
                 if(currentTrack.getName().equals(getMsg().getPath().get(0)))
                 {
+                    sleep();
                     currentTrack = (Track) currentTrack.getNeighbor(1);
                     getMsg().pop();
-                }
-
-                try
-                {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e)
-                {
-                    e.printStackTrace();
+                    sleep();
                 }
             }
             System.out.println("On " + currentTrack.getName());
@@ -75,4 +69,18 @@ public class Train extends Component
             return false;
         }
     }
+
+    private void sleep()
+    {
+        try
+        {
+            Thread.sleep(800);
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public synchronized Track getCurrentTrack() { return currentTrack; }
 }

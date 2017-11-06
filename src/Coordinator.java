@@ -15,6 +15,8 @@ class Coordinator
     private String laneConfig;
     private List<Station> stations;
     private List<Track> tracks;
+    private List<Component> components;
+    private Train train;
     private List<Thread> threads;
 
     Coordinator(Stage window)
@@ -22,17 +24,20 @@ class Coordinator
         this.window = window;
         stations = new ArrayList<>();
         tracks = new ArrayList<>();
+        components = new ArrayList<>();
         threads = new ArrayList<>();
     }
 
     void initSimulation()
     {
         readConfigFile();
-        initDisplay(); // initialize the display config (everything except the train :D)
         processConfigFile();
+
         initStations();
         initTracks();
         initTestTrain(); // test train for first version :D
+        initDisplay(); // initialize the display config (everything except the train :D)
+
         startThreads();
     }
 
@@ -54,7 +59,7 @@ class Coordinator
 
     private void initDisplay()
     {
-        Display display = new Display(window, laneConfig);
+        Display display = new Display(window, components, train);
         display.initialize();
         display.drawConfig();
     }
@@ -75,6 +80,7 @@ class Coordinator
 
                 Station station = new Station();
                 stations.add(station);
+                components.add(station);
                 threads.add(new Thread(station, city));
             }
 
@@ -83,6 +89,7 @@ class Coordinator
                 trackCount++;
                 Track track = new Track();
                 tracks.add(track);
+                components.add(track);
                 threads.add(new Thread(track, "Track " + String.valueOf(trackCount)));
             }
         }
@@ -124,7 +131,7 @@ class Coordinator
 
     private void initTestTrain()
     {
-        Train train = new Train(tracks.get(0));
+        this.train = new Train(tracks.get(0));
         threads.add(new Thread(train, "Train"));
     }
 
