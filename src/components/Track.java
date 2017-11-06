@@ -16,7 +16,7 @@ public class Track extends Component
         Component neighbor = getNeighbor(getMsg().getDirection());
         String destination = getMsg().getDestination();
 
-        getMsg().push(getName()); // add current track to path
+        getMsg().add(getName()); // add current track to path
 
         if (train != null && destination.equals("Train"))
         {

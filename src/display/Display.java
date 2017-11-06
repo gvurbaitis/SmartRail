@@ -61,14 +61,14 @@ public class Display
                 c.setX(x);
                 c.setY(y);
                 drawStation(x, y);
-                x += 50;
+                x += 40;
             }
             if (c instanceof Track)
             {
                 c.setX(x);
                 c.setY(y);
                 drawTrack(x, y);
-                x += 50;
+                x += 40;
             }
         }
 
@@ -78,14 +78,14 @@ public class Display
 
     private void drawStation(double x, double y)
     {
-        Rectangle station = new Rectangle(x, y, 40, 30);
+        Rectangle station = new Rectangle(x, y, 30, 20);
         station.setFill(Color.BLUE);
         root.getChildren().add(station);
     }
 
     private void drawTrack(double x, double y)
     {
-        Rectangle track = new Rectangle(x, y, 40, 30);
+        Rectangle track = new Rectangle(x, y, 30, 20);
         track.setFill(Color.BLACK);
         root.getChildren().add(track);
     }
@@ -94,7 +94,7 @@ public class Display
     {
         if (trainRect == null)
         {
-            trainRect = new Rectangle(x, y, 40, 30);
+            trainRect = new Rectangle(x, y, 30, 20);
             trainRect.setFill(Color.RED);
             root.getChildren().add(trainRect);
         }

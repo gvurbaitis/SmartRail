@@ -9,9 +9,9 @@ class Message
     private String destination;
     private List<String> path = new ArrayList<>();
 
-    void push(String s) { path.add(s); }
+    void add(String s) { path.add(s); }
 
-    void pop() { path.remove(0); }
+    void remove() { path.remove(0); }
 
     void setPath(List<String> path) { this.path = path; }
 

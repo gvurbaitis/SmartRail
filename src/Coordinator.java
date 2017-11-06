@@ -74,7 +74,7 @@ class Coordinator
             if (c == 'S')
             {
                 String city;
-                if (stationCount == 0) city = "Albuquerque";
+                if (stationCount == 0) city = "New York";
                 else city = "Atlantis";
                 stationCount++;
 
@@ -132,6 +132,9 @@ class Coordinator
     private void initTestTrain()
     {
         this.train = new Train(tracks.get(0));
+        this.train.setDeparture("New York");
+        this.train.setDestination("Atlantis");
+        this.train.setDir(1);
         threads.add(new Thread(train, "Train"));
     }
 

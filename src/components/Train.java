@@ -3,7 +3,8 @@ package components;
 public class Train extends Component
 {
     private Track currentTrack;
-    //private int direction; // -1 is left, 1 is right (not sure if needed just yet)
+    private String departure, destination;
+    private int dir; // -1 is left, 1 is right (not sure if needed just yet)
 
     public Train(Track currentTrack)
     {
@@ -22,8 +23,8 @@ public class Train extends Component
     private void findRoute()
     {
         Message msg = new Message();
-        msg.setDestination("Atlantis");
-        msg.setDirection(1);
+        msg.setDestination(destination);
+        msg.setDirection(dir);
         currentTrack.setTrain(this);
 
         currentTrack.accept(msg);
@@ -33,26 +34,39 @@ public class Train extends Component
     {
         if (isRouteConfirmed())
         {
+            Component neighbor;
+
             System.out.println("The path is: " + getMsg().getPath());
             System.out.println();
             System.out.println("moving...");
 
             // temporary stop condition
-            while (!(currentTrack.getNeighbor(1) instanceof Station))
+            while (true)
             {
                 System.out.println("On " + currentTrack.getName());
                 currentTrack.setTrain(null);
+                neighbor = currentTrack.getNeighbor(dir);
 
-                if(currentTrack.getName().equals(getMsg().getPath().get(0)))
+                if (neighbor instanceof Station)
+                {
+                    System.out.println("Arrived in " + currentTrack.getNeighbor(dir).getName());
+
+                    // break once round trip is complete
+                    if (neighbor.getName().equals(departure)) break;
+
+                    getMsg().remove(); // remove the duplicate track off the path list
+                    dir *= -1;
+                    neighbor = currentTrack.getNeighbor(dir);
+                }
+
+                if (currentTrack.getName().equals(getMsg().getPath().get(0)))
                 {
                     sleep();
-                    currentTrack = (Track) currentTrack.getNeighbor(1);
-                    getMsg().pop();
+                    currentTrack = (Track) neighbor;
+                    getMsg().remove();
                     sleep();
                 }
             }
-            System.out.println("On " + currentTrack.getName());
-            System.out.println("Arrived in " + currentTrack.getNeighbor(1).getName());
         }
     }
 
@@ -74,7 +88,7 @@ public class Train extends Component
     {
         try
         {
-            Thread.sleep(800);
+            Thread.sleep(400);
         }
         catch (InterruptedException e)
         {
@@ -83,4 +97,8 @@ public class Train extends Component
     }
 
     public synchronized Track getCurrentTrack() { return currentTrack; }
+
+    public void setDestination(String destination) { this.destination = destination; }
+    public void setDeparture(String departure) { this.departure = departure; }
+    public void setDir(int dir) { this.dir = dir; }
 }
