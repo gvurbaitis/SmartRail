@@ -14,10 +14,10 @@ public abstract class Component implements Runnable
     {
         shutdown = false;
         name = Thread.currentThread().getName();
+        //System.out.println(getName() + " has started!");
 
         while (!shutdown)
         {
-            //System.out.println(getName() + " has started!");
             update();
         }
     }
@@ -50,31 +50,13 @@ public abstract class Component implements Runnable
     }
 
     String getName() { return this.name; }
-    Message getMsg()
-    {
-        return msg;
-    }
-    void shutdown()
-    {
-        this.shutdown = true;
-    }
+    Message getMsg() { return msg; }
+    void shutdown() { this.shutdown = true; }
 
-    public Component getRight()
-    {
-        return right;
-    }
-    public void setRight(Component right)
-    {
-        this.right = right;
-    }
-    public Component getLeft()
-    {
-        return left;
-    }
-    public void setLeft(Component left)
-    {
-        this.left = left;
-    }
+    public Component getRight() { return right; }
+    public void setRight(Component right) { this.right = right; }
+    public Component getLeft() { return left; }
+    public void setLeft(Component left) { this.left = left; }
 
     public double getX() { return x; }
     public void setX(double x) { this.x = x; }

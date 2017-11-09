@@ -24,7 +24,12 @@ public class Station extends Component
         {
             System.out.println("Found " + destination + "!");
             System.out.println();
+            getMsg().setValidPath(true);
             return true;
+        }
+        else
+        {
+            getMsg().setValidPath(false);
         }
 
         return false;
@@ -32,15 +37,10 @@ public class Station extends Component
 
     private void sendConfirmation()
     {
-        Message msg = new Message();
-        msg.setDestination("Train"); // temporary, for testing
-        msg.setDirection(-1);
-        msg.setPath(getMsg().getPath());
-        originator.accept(msg);
+        getMsg().setDestination("Train"); // temporary, for testing
+        getMsg().setDirection(getMsg().getDirection() * -1);
+        originator.accept(getMsg());
     }
 
-    public void setOriginator(Track originator)
-    {
-        this.originator = originator;
-    }
+    public void setOriginator(Track originator) { this.originator = originator; }
 }

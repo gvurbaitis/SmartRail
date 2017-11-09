@@ -30,13 +30,27 @@ public class Train extends Component
         currentTrack.accept(msg);
     }
 
+    private boolean isRouteConfirmed()
+    {
+        if (getMsg().isValidPath())
+        {
+            System.out.println(getName() + " received confirmation!");
+            return true;
+        }
+        else
+        {
+            System.out.println(getName() + " shutting down...");
+            shutdown();
+            return false;
+        }
+    }
+
     private void move()
     {
         if (isRouteConfirmed())
         {
             Component neighbor;
 
-            System.out.println("The path is: " + getMsg().getPath());
             System.out.println();
             System.out.println("moving...");
 
@@ -54,33 +68,17 @@ public class Train extends Component
                     // break once round trip is complete
                     if (neighbor.getName().equals(departure)) break;
 
-                    getMsg().remove(); // remove the duplicate track off the path list
                     dir *= -1;
                     neighbor = currentTrack.getNeighbor(dir);
                 }
 
-                if (currentTrack.getName().equals(getMsg().getPath().get(0)))
+                if (currentTrack.isLock())
                 {
                     sleep();
                     currentTrack = (Track) neighbor;
-                    getMsg().remove();
                     sleep();
                 }
             }
-        }
-    }
-
-    private boolean isRouteConfirmed()
-    {
-        if (getName().equals(getMsg().getDestination()))
-        {
-            System.out.println(getName() + " received confirmation!");
-            return true;
-        }
-        else
-        {
-            System.out.println(getName() + " cannot find path!");
-            return false;
         }
     }
 
