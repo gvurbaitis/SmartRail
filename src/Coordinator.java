@@ -33,11 +33,8 @@ class Coordinator
         readConfigFile();
         processConfigFile();
         initConfig();
-
-        //initStations();
-        //initTracks();
         initTestTrain(); // test train for first version :D
-        //initDisplay(); // initialize the display config (everything except the train :D)
+        initDisplay(); // initialize the display config (everything except the train :D)
 
         startThreads();
     }
@@ -46,7 +43,7 @@ class Coordinator
     {
         try
         {
-            File file = new File("file:../../resources/config");
+            File file = new File("resources/config");
             Scanner sc = new Scanner(file);
 
             while (sc.hasNextLine())
@@ -152,41 +149,6 @@ class Coordinator
         }
     }
 
-    /**
-    private void initStations()
-    {
-        for (int i = 0; i < stations.size(); i++)
-        {
-            Station station = stations.get(i);
-
-            if (i == 0) // if even or 0, set right
-            {
-                Track track = tracks.get(0);
-                station.setOriginator(track);
-                station.setRight(track);
-                track.setLeft(station);
-            }
-            else
-            {
-                Track track = tracks.get(tracks.size() - 1);
-                station.setOriginator(track);
-                station.setLeft(track);
-                track.setRight(station);
-            }
-        }
-    }
-
-    private void initTracks()
-    {
-        for (int i = 0; i < tracks.size(); i++)
-        {
-            Track track = tracks.get(i);
-
-            if (track.getLeft() == null) track.setLeft(tracks.get(i - 1));
-            if (track.getRight() == null) track.setRight(tracks.get(i + 1));
-        }
-    }*/
-
     private void initTestTrain()
     {
         train = new Train(tracks.get(0));
@@ -198,9 +160,9 @@ class Coordinator
 
     private void initDisplay()
     {
-        //Display display = new Display(window, components, train);
-        //display.initialize();
-        //display.drawConfig();
+        Display display = new Display(window, components, train);
+        display.initialize();
+        display.drawConfig();
     }
 
     private void startThreads()

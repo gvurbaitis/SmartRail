@@ -21,11 +21,11 @@ public class Display
 {
     private Stage window;
     private Group root;
-    private List<Component> components;
+    private List<List<Component>> components;
     private Train train;
     private Rectangle trainRect;
 
-    public Display(Stage window, List<Component> components, Train train)
+    public Display(Stage window, List<List<Component>> components, Train train)
     {
         this.window = window;
         this.components = components;
@@ -56,22 +56,28 @@ public class Display
         double x = 30;
         double y = 30;
 
-        for (Component c : components)
+        for (List<Component> lane : components)
         {
-            if (c instanceof Station)
+            for (Component c : lane)
             {
-                c.setX(x);
-                c.setY(y);
-                drawStation(x, y);
-                x += 60;
+                if (c instanceof Station)
+                {
+                    c.setX(x);
+                    c.setY(y);
+                    drawStation(x, y);
+                    x += 60;
+                }
+                if (c instanceof Track)
+                {
+                    c.setX(x);
+                    c.setY(y + 15);
+                    drawTrack(x, y + 15);
+                    x += 40;
+                }
             }
-            if (c instanceof Track)
-            {
-                c.setX(x);
-                c.setY(y + 15);
-                drawTrack(x, y + 15);
-                x += 40;
-            }
+
+            x = 30;
+            y += 120;
         }
 
         Animation animation = new Animation();
@@ -81,7 +87,7 @@ public class Display
     private void drawStation(double x, double y)
     {
         Rectangle station = new Rectangle(x, y, 60, 60);
-        Image img = new Image("file:../../resources/station.png", false);
+        Image img = new Image("station.png", false);
         ImagePattern imagePattern = new ImagePattern(img);
         station.setFill(imagePattern);
 
@@ -91,7 +97,7 @@ public class Display
     private void drawTrack(double x, double y)
     {
         Rectangle track = new Rectangle(x, y, 40, 30);
-        Image img = new Image("file:../../resources/track.png", false);
+        Image img = new Image("track.png", false);
         ImagePattern imagePattern = new ImagePattern(img);
         track.setFill(imagePattern);
 
@@ -103,7 +109,7 @@ public class Display
         if (trainRect == null)
         {
             trainRect = new Rectangle(x, y, 50, 40);
-            Image img = new Image("file:../../resources/train.png", false);
+            Image img = new Image("train.png", false);
             ImagePattern imagePattern = new ImagePattern(img);
             trainRect.setFill(imagePattern);
 
