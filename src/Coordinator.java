@@ -13,12 +13,15 @@ class Coordinator
     private Stage window;
     private List<String> config;
     private List<List<Component>> components;
+    private List<Component> tracksSwitchesLights;
+    private Train train;
     private List<Thread> threads;
 
     Coordinator(Stage window)
     {
         this.window = window;
         config = new ArrayList<>();
+        tracksSwitchesLights = new ArrayList<>();
         components = new ArrayList<>();
         threads = new ArrayList<>();
     }
@@ -28,16 +31,23 @@ class Coordinator
         readConfigFile();
         processConfigFile();
         initConfig();
-        startThreads();
+        initTracksSwitchesLights();
 
-        initDisplay(); // initialize the display config (everything except the train :D)
+        //initDisplay(); // initialize the display config (everything except the train :D)
+        //initTestTrain(); // test train for first version :D
+
+        startThreads();
     }
 
     private void readConfigFile()
     {
         try
         {
-            File file = new File("resources/config");
+//<<<<<<< Updated upstream
+//            File file = new File("resources/config");
+//=======
+            File file = new File("././resources/config");
+//>>>>>>> Stashed changes
             Scanner sc = new Scanner(file);
 
             while (sc.hasNextLine())
@@ -67,6 +77,7 @@ class Coordinator
             List<Component> lane = new ArrayList<>();
             ThreadGroup group = new ThreadGroup(String.valueOf(groupCount));
 
+
             for (char c : s.toCharArray())
             {
                 if (c == 'S')
@@ -93,12 +104,12 @@ class Coordinator
                     threads.add(new Thread(group, light, "Light " + String.valueOf(lightCount)));
                 }
 
-                if (c == 's')
+                if (c == 't')
                 {
                     switchCount++;
-                    Switch sw = new Switch();
-                    lane.add(sw);
-                    threads.add(new Thread(group, sw, "Switch " + String.valueOf(switchCount)));
+                    SwitchTop switchy = new SwitchTop();
+                    tracksSwitchesLights.add(switchy);
+                    threads.add(new Thread(switchy, "SwitchTop " + String.valueOf(switchCount)));
                 }
             }
             components.add(lane);
@@ -139,25 +150,72 @@ class Coordinator
         }
     }
 
+
     private void initStation(int stationCount, Component current, Component left, Component right)
     {
         if (stationCount == 0)
         {
             current.setRight(right);
             ((Station) current).setOriginator((Track) right);
-        }
-        else
+        } else
         {
             current.setLeft(left);
             ((Station) current).setOriginator((Track) left);
         }
     }
+    private void initTracksSwitchesLights()
+    {
+        for (int i = 0; i < tracksSwitchesLights.size(); i++)
+        {
+            Component component = tracksSwitchesLights.get(i);
+
+            if(component instanceof SwitchTop)
+            {
+                SwitchBottom sb = new SwitchBottom();
+                Track track1 = new Track();
+                Track track2 = new Track();
+                Station station3 = new Station();
+
+                ((SwitchTop)component).setDownRight(sb);
+                sb.setUpLeft(component);
+                sb.setRight(track1);
+                sb.setUp(true);
+                track1.setLeft(sb);
+                track1.setRight(track2);
+                track2.setLeft(track1);
+                track2.setRight(station3);
+                station3.setOriginator(track2);
+                threads.add(new Thread(sb, "SwitchBottom " + 1));
+                threads.add(new Thread(track1, "Track " + 13));
+                threads.add(new Thread(track2, "Track " + 666));
+                threads.add(new Thread(station3, "Atlantis"));
+                System.out.println("Nik Rocks!");
+            }
+            if (component.getLeft() == null) component.setLeft(tracksSwitchesLights.get(i - 1));
+            if (component.getRight() == null) component.setRight(tracksSwitchesLights.get(i + 1));
+        }
+    }
 
     private void initDisplay()
     {
+//<<<<<<< Updated upstream
         Display display = new Display(window, components);
         display.initialize();
         display.drawConfig();
+//=======
+        for (int i = 0; i < tracksSwitchesLights.size(); i++)
+        {
+            if (tracksSwitchesLights.get(i) instanceof Track)
+            {
+                this.train = new Train((Track)tracksSwitchesLights.get(0));
+                break;
+            }
+        }
+        this.train.setDeparture("New York");
+        this.train.setDestination("Atlantis");
+        this.train.setDir(1);
+        threads.add(new Thread(train, "Train"));
+//>>>>>>> Stashed changes
     }
 
     private void startThreads()

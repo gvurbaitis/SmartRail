@@ -72,13 +72,66 @@ public class Train extends Component
                     dir *= -1;
                     neighbor = currentTrack.getNeighbor(dir);
                 }
+<<<<<<< Updated upstream
 
                 if (currentTrack.isLock())
+=======
+                if (currentTrack.getName().equals(getMsg().getPath().get(0))
+                        &&!(neighbor instanceof SwitchTop)&&!(neighbor instanceof SwitchBottom))
+>>>>>>> Stashed changes
                 {
                     sleep();
                     currentTrack = (Track) neighbor;
                     sleep();
                 }
+                if (neighbor instanceof SwitchTop)
+                {
+                    System.out.println(dir);
+                    System.out.println("Found: " + currentTrack.getNeighbor(dir).getName());
+                    if (((SwitchTop) neighbor).getUp() && dir == 1 || /*!((SwitchTop) neighbor).getUp() &&*/ dir == -1)
+                    {
+                        sleep();
+                        currentTrack = (Track) neighbor.getNeighbor(dir);
+                        System.out.println(currentTrack.getName());
+                        getMsg().remove();
+                        getMsg().remove();
+                        sleep();
+                    } else
+                    {
+                        sleep();
+                        currentTrack = (Track) ((SwitchTop) neighbor).getDownRight().getNeighbor(dir);
+                        System.out.println(currentTrack.getName());
+                        getMsg().remove();
+                        getMsg().remove();
+                        getMsg().remove();
+                        sleep();
+                    }
+                }
+                    if (neighbor instanceof SwitchBottom)
+                    {
+                        System.out.println(dir);
+                        System.out.println("Found: " + currentTrack.getNeighbor(dir).getName());
+                        if (((SwitchBottom) neighbor).getUp() && dir == 1 || !((SwitchBottom) neighbor).getUp() && dir == -1)
+                        {
+                            sleep();
+                            currentTrack = (Track) neighbor.getNeighbor(dir);
+                            System.out.println(currentTrack.getName());
+                            getMsg().remove();
+                            getMsg().remove();
+                            sleep();
+                        } else
+                        {
+                            sleep();
+                            currentTrack = (Track) ((SwitchBottom) neighbor).getUpLeft().getNeighbor(dir);
+                            System.out.println(currentTrack.getName());
+                            getMsg().remove();
+                            getMsg().remove();
+                            getMsg().remove();
+                            sleep();
+                        }
+                    }
+
+
             }
         }
     }
