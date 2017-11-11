@@ -3,12 +3,11 @@ package components;
 public class Track extends Component
 {
     private Component train = null; // null when train is not on this track
-    private boolean lock;
 
     void update()
     {
         justWait();
-        lock = true;
+        lock();
         System.out.println(getName() + " received message and woke up.");
         processMessage();
     }
@@ -29,7 +28,4 @@ public class Track extends Component
     }
 
     void setTrain(Component train) { this.train = train; }
-
-    boolean isLock() { return lock; }
-    void unlock() { this.lock = false; }
 }

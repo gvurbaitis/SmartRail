@@ -9,6 +9,7 @@ public class SwitchBottom extends Component
   void update()
   {
     justWait();
+    lock();
     System.out.println(getName() + " received message and woke up.");
     processMessage();
   }
@@ -18,13 +19,12 @@ public class SwitchBottom extends Component
     Component neighbor = getNeighbor(getMsg().getDirection());
     String destination = getMsg().getDestination();
 
-    getMsg().add(getName()); // add current track to path
-
     if (train != null && destination.equals("Train"))
     {
       train.accept(getMsg());
     }
-    else if(this.up && getMsg().getDirection() == -1){
+    else if(this.up && getMsg().getDirection() == -1)
+    {
       upLeft.accept(getMsg());
     }
     else

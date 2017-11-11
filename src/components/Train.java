@@ -17,7 +17,7 @@ public class Train extends Component
         justWait();
         move();
         shutdown(); // temporarily for testing
-        //System.exit(0); // for now when train reaches destination kill simulation
+        System.exit(0); // for now when train reaches destination kill simulation
     }
 
     private void findRoute()
@@ -48,6 +48,8 @@ public class Train extends Component
 
     private void move()
     {
+        boolean shouldUnlock = false;
+
         if (isRouteConfirmed())
         {
             Component neighbor;
@@ -70,63 +72,79 @@ public class Train extends Component
                     if (neighbor.getName().equals(departure)) break;
 
                     dir *= -1;
+                    shouldUnlock = true;
                     neighbor = currentTrack.getNeighbor(dir);
                 }
-<<<<<<< Updated upstream
 
-                if (currentTrack.isLock())
-=======
-                if (currentTrack.getName().equals(getMsg().getPath().get(0))
-                        &&!(neighbor instanceof SwitchTop)&&!(neighbor instanceof SwitchBottom))
->>>>>>> Stashed changes
+                if (currentTrack.isLock()
+                        && !(neighbor instanceof SwitchTop)
+                        && !(neighbor instanceof SwitchBottom))
                 {
                     sleep();
+                    if (shouldUnlock) currentTrack.unlock();
                     currentTrack = (Track) neighbor;
                     sleep();
                 }
-                if (neighbor instanceof SwitchTop)
+
+                if (neighbor instanceof SwitchTop && neighbor.isLock())
                 {
-                    System.out.println(dir);
-                    System.out.println("Found: " + currentTrack.getNeighbor(dir).getName());
+                    //System.out.println(dir);
+                    //System.out.println("Found: " + currentTrack.getNeighbor(dir).getName());
                     if (((SwitchTop) neighbor).getUp() && dir == 1 || /*!((SwitchTop) neighbor).getUp() &&*/ dir == -1)
                     {
                         sleep();
+                        if (shouldUnlock)
+                        {
+                            neighbor.unlock();
+                            currentTrack.unlock();
+                        }
                         currentTrack = (Track) neighbor.getNeighbor(dir);
-                        System.out.println(currentTrack.getName());
-                        getMsg().remove();
-                        getMsg().remove();
+                        //System.out.println(currentTrack.getName());
                         sleep();
-                    } else
+                    }
+                    else
                     {
                         sleep();
+
+                        if (shouldUnlock)
+                        {
+                            neighbor.unlock();
+                            ((SwitchTop) neighbor).getDownRight().unlock();
+                            currentTrack.unlock();
+                        }
                         currentTrack = (Track) ((SwitchTop) neighbor).getDownRight().getNeighbor(dir);
-                        System.out.println(currentTrack.getName());
-                        getMsg().remove();
-                        getMsg().remove();
-                        getMsg().remove();
+                        //System.out.println(currentTrack.getName());
                         sleep();
                     }
                 }
-                    if (neighbor instanceof SwitchBottom)
+                    if (neighbor instanceof SwitchBottom && neighbor.isLock())
                     {
-                        System.out.println(dir);
-                        System.out.println("Found: " + currentTrack.getNeighbor(dir).getName());
+                        //System.out.println(dir);
+                        //System.out.println("Found: " + currentTrack.getNeighbor(dir).getName());
                         if (((SwitchBottom) neighbor).getUp() && dir == 1 || !((SwitchBottom) neighbor).getUp() && dir == -1)
                         {
                             sleep();
+                            if (shouldUnlock)
+                            {
+                                neighbor.unlock();
+                                currentTrack.unlock();
+                            }
                             currentTrack = (Track) neighbor.getNeighbor(dir);
-                            System.out.println(currentTrack.getName());
-                            getMsg().remove();
-                            getMsg().remove();
+                            //System.out.println(currentTrack.getName());
                             sleep();
                         } else
                         {
                             sleep();
+
+                            if (shouldUnlock)
+                            {
+                                neighbor.unlock();
+                                ((SwitchBottom) neighbor).getUpLeft().unlock();
+                                currentTrack.unlock();
+                            }
+
                             currentTrack = (Track) ((SwitchBottom) neighbor).getUpLeft().getNeighbor(dir);
-                            System.out.println(currentTrack.getName());
-                            getMsg().remove();
-                            getMsg().remove();
-                            getMsg().remove();
+                            //System.out.println(currentTrack.getName());
                             sleep();
                         }
                     }

@@ -31,23 +31,23 @@ class Coordinator
         readConfigFile();
         processConfigFile();
         initConfig();
-        initTracksSwitchesLights();
+        startThreads();
+
+        Train train = new Train((Track) components.get(0).get(1));
+        train.setDeparture("Station 1");
+        train.setDestination("bottom station");
+        train.setDir(1);
+        (new Thread(train, "Train 1")).start();
+        //initTracksSwitchesLights();
 
         //initDisplay(); // initialize the display config (everything except the train :D)
-        //initTestTrain(); // test train for first version :D
-
-        startThreads();
     }
 
     private void readConfigFile()
     {
         try
         {
-//<<<<<<< Updated upstream
-//            File file = new File("resources/config");
-//=======
-            File file = new File("././resources/config");
-//>>>>>>> Stashed changes
+            File file = new File("resources/config");
             Scanner sc = new Scanner(file);
 
             while (sc.hasNextLine())
@@ -107,9 +107,19 @@ class Coordinator
                 if (c == 't')
                 {
                     switchCount++;
-                    SwitchTop switchy = new SwitchTop();
-                    tracksSwitchesLights.add(switchy);
-                    threads.add(new Thread(switchy, "SwitchTop " + String.valueOf(switchCount)));
+                    SwitchTop sw = new SwitchTop();
+                    lane.add(sw);
+                    //tracksSwitchesLights.add(sw);
+                    threads.add(new Thread(sw, "Switch " + String.valueOf(switchCount)));
+                }
+
+                if (c == 'b')
+                {
+                    switchCount++;
+                    SwitchBottom sw = new SwitchBottom();
+                    lane.add(sw);
+                    //tracksSwitchesLights.add(sw);
+                    threads.add(new Thread(sw, "Switch " + String.valueOf(switchCount)));
                 }
             }
             components.add(lane);
@@ -145,6 +155,40 @@ class Coordinator
                 {
                     current.setLeft(left);
                     current.setRight(right);
+                }
+
+                if(current instanceof SwitchTop)
+                {
+                    SwitchBottom sb = new SwitchBottom();
+                    Track bottom1 = new Track();
+                    Track bottom2 = new Track();
+                    Station bottomRightStation = new Station();
+                    threads.add(new Thread(bottom1, "bottom 1"));
+                    threads.add(new Thread(bottom2, "bottom 2"));
+                    threads.add(new Thread(bottomRightStation, "bottom station"));
+                    threads.add(new Thread(sb, "bottom switch"));
+
+                    current.setRight(right);
+                    current.setLeft(left);
+                    ((SwitchTop) current).setUp(false);
+                    ((SwitchTop) current).setDownRight(sb);
+
+                    bottom1.setRight(bottom2);
+                    bottom1.setLeft(sb);
+                    bottom2.setLeft(bottom1);
+                    bottom2.setRight(bottomRightStation);
+
+                    bottomRightStation.setOriginator(bottom2);
+                    bottomRightStation.setLeft(bottom2);
+
+                    sb.setRight(bottom1);
+                    sb.setUpLeft(current);
+                    sb.setUp(true);
+                }
+
+                if (current instanceof SwitchBottom)
+                {
+                    // TBD
                 }
             }
         }
@@ -198,24 +242,9 @@ class Coordinator
 
     private void initDisplay()
     {
-//<<<<<<< Updated upstream
         Display display = new Display(window, components);
         display.initialize();
         display.drawConfig();
-//=======
-        for (int i = 0; i < tracksSwitchesLights.size(); i++)
-        {
-            if (tracksSwitchesLights.get(i) instanceof Track)
-            {
-                this.train = new Train((Track)tracksSwitchesLights.get(0));
-                break;
-            }
-        }
-        this.train.setDeparture("New York");
-        this.train.setDestination("Atlantis");
-        this.train.setDir(1);
-        threads.add(new Thread(train, "Train"));
-//>>>>>>> Stashed changes
     }
 
     private void startThreads()

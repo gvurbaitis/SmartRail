@@ -8,6 +8,7 @@ public abstract class Component implements Runnable
     private Component right;
     private Component left;
     private boolean shutdown;
+    private boolean lock;
     private double x, y;
 
     @Override
@@ -67,4 +68,8 @@ public abstract class Component implements Runnable
     public void setX(double x) { this.x = x; }
     public double getY() { return y; }
     public void setY(double y) { this.y = y; }
+
+    boolean isLock() { return lock; }
+    void unlock() { this.lock = false; }
+    void lock() { this.lock = true; }
 }

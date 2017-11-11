@@ -9,6 +9,7 @@ public class SwitchTop extends Component
   void update()
   {
     justWait();
+    lock();
     System.out.println(getName() + " received message and woke up.");
     processMessage();
   }
@@ -18,13 +19,12 @@ public class SwitchTop extends Component
     Component neighbor = getNeighbor(getMsg().getDirection());
     String destination = getMsg().getDestination();
 
-    getMsg().add(getName()); // add current track to path
-
     if (train != null && destination.equals("Train"))
     {
       train.accept(getMsg());
     }
-    else if(!this.up && getMsg().getDirection() == 1){
+    else if(!this.up && getMsg().getDirection() == 1)
+    {
       downRight.accept(getMsg());
     }
     else
@@ -34,7 +34,7 @@ public class SwitchTop extends Component
   }
   public void setDownRight(Component downRight) { this.downRight = downRight; }
   public Component getDownRight(){return this.downRight; }
-  void setUp(boolean up) { this.up = up; }
+  public void setUp(boolean up) { this.up = up; }
   boolean getUp(){return this.up; }
   void setTrain(Component train) { this.train = train; }
 }

@@ -93,14 +93,10 @@ public class Display
     private void drawStation(double x, double y, String group, String name)
     {
         Rectangle station = new Rectangle(x, y, 60, 60);
-<<<<<<< Updated upstream
         station.setId(name);
         station.setUserData(group);
 
         Image img = new Image("station.png", false);
-=======
-        Image img = new Image("file:././resources/station.png", false);
->>>>>>> Stashed changes
         ImagePattern imagePattern = new ImagePattern(img);
         station.setFill(imagePattern);
         station.setOnMouseClicked(this::initTrain);
@@ -111,11 +107,7 @@ public class Display
     private void drawTrack(double x, double y)
     {
         Rectangle track = new Rectangle(x, y, 40, 30);
-<<<<<<< Updated upstream
         Image img = new Image("track.png", false);
-=======
-        Image img = new Image("file:././resources/track.png", false);
->>>>>>> Stashed changes
         ImagePattern imagePattern = new ImagePattern(img);
         track.setFill(imagePattern);
 
@@ -157,11 +149,7 @@ public class Display
         if (trainRect == null)
         {
             trainRect = new Rectangle(x, y, 50, 40);
-<<<<<<< Updated upstream
             Image img = new Image("train.png", false);
-=======
-            Image img = new Image("file:././resources/train.png", false);
->>>>>>> Stashed changes
             ImagePattern imagePattern = new ImagePattern(img);
             trainRect.setFill(imagePattern);
 
