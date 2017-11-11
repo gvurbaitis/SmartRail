@@ -18,7 +18,7 @@ public class Track extends Component
         Component neighbor = getNeighbor(getMsg().getDirection());
         String destination = getMsg().getDestination();
 
-        if (train != null && destination.equals("Train"))
+        if (train != null && destination.equals(getMsg().getTrainName()))
         {
             train.accept(getMsg());
         }

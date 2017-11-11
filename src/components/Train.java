@@ -17,7 +17,7 @@ public class Train extends Component
         justWait();
         move();
         shutdown(); // temporarily for testing
-        System.exit(0); // for now when train reaches destination kill simulation
+        //System.exit(0); // for now when train reaches destination kill simulation
     }
 
     private void findRoute()
@@ -25,6 +25,7 @@ public class Train extends Component
         Message msg = new Message();
         msg.setDestination(destination);
         msg.setDirection(dir);
+        msg.setTrainName(getName());
         currentTrack.setTrain(this);
 
         currentTrack.accept(msg);

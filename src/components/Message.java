@@ -4,7 +4,11 @@ class Message
 {
     private int direction;
     private String destination;
+    private String trainName;
     private boolean isValidPath;
+
+    String getTrainName() { return trainName; }
+    void setTrainName(String trainName) { this.trainName = trainName; }
 
     boolean isValidPath() { return isValidPath; }
     void setValidPath(boolean validPath) { isValidPath = validPath; }

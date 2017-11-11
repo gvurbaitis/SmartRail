@@ -12,18 +12,13 @@ class Coordinator
 {
     private Stage window;
     private List<String> config;
-    private List<Station> stations;
-    private List<Track> tracks;
     private List<List<Component>> components;
-    private Train train;
     private List<Thread> threads;
 
     Coordinator(Stage window)
     {
         this.window = window;
         config = new ArrayList<>();
-        stations = new ArrayList<>();
-        tracks = new ArrayList<>();
         components = new ArrayList<>();
         threads = new ArrayList<>();
     }
@@ -33,10 +28,9 @@ class Coordinator
         readConfigFile();
         processConfigFile();
         initConfig();
-        initTestTrain(); // test train for first version :D
-        initDisplay(); // initialize the display config (everything except the train :D)
-
         startThreads();
+
+        initDisplay(); // initialize the display config (everything except the train :D)
     }
 
     private void readConfigFile()
@@ -62,13 +56,16 @@ class Coordinator
 
     private void processConfigFile()
     {
+        int groupCount = 0;
         int trackCount = 0;
         int stationCount = 0;
         int lightCount = 0;
+        int switchCount = 0;
 
         for (String s : config)
         {
             List<Component> lane = new ArrayList<>();
+            ThreadGroup group = new ThreadGroup(String.valueOf(groupCount));
 
             for (char c : s.toCharArray())
             {
@@ -76,18 +73,16 @@ class Coordinator
                 {
                     stationCount++;
                     Station station = new Station();
-                    stations.add(station);
                     lane.add(station);
-                    threads.add(new Thread(station, "Station " + String.valueOf(stationCount)));
+                    threads.add(new Thread(group, station, "Station " + String.valueOf(stationCount)));
                 }
 
                 if (c == '=')
                 {
                     trackCount++;
                     Track track = new Track();
-                    tracks.add(track);
                     lane.add(track);
-                    threads.add(new Thread(track, "Track " + String.valueOf(trackCount)));
+                    threads.add(new Thread(group, track, "Track " + String.valueOf(trackCount)));
                 }
 
                 if (c == 'l')
@@ -95,10 +90,19 @@ class Coordinator
                     lightCount++;
                     Light light = new Light();
                     lane.add(light);
-                    threads.add(new Thread(light, "Light " + String.valueOf(lightCount)));
+                    threads.add(new Thread(group, light, "Light " + String.valueOf(lightCount)));
+                }
+
+                if (c == 's')
+                {
+                    switchCount++;
+                    Switch sw = new Switch();
+                    lane.add(sw);
+                    threads.add(new Thread(group, sw, "Switch " + String.valueOf(switchCount)));
                 }
             }
             components.add(lane);
+            groupCount++;
         }
     }
 
@@ -149,18 +153,9 @@ class Coordinator
         }
     }
 
-    private void initTestTrain()
-    {
-        train = new Train(tracks.get(0));
-        train.setDeparture("Station 1");
-        train.setDestination("Station 2");
-        train.setDir(1);
-        threads.add(new Thread(train, "Train"));
-    }
-
     private void initDisplay()
     {
-        Display display = new Display(window, components, train);
+        Display display = new Display(window, components);
         display.initialize();
         display.drawConfig();
     }

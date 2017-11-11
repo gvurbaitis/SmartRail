@@ -37,7 +37,7 @@ public class Station extends Component
 
     private void sendConfirmation()
     {
-        getMsg().setDestination("Train"); // temporary, for testing
+        getMsg().setDestination(getMsg().getTrainName());
         getMsg().setDirection(getMsg().getDirection() * -1);
         originator.accept(getMsg());
     }
