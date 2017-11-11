@@ -114,7 +114,37 @@ public class Display
         root.getChildren().add(track);
     }
 
-    private void drawTrain(double x, double y)
+    private void initTrain(MouseEvent e)
+    {
+        Rectangle r = (Rectangle) e.getSource();
+
+        if (stationClickCount == 0)
+        {
+            int lane = Integer.parseInt((String) r.getUserData());
+            int laneSize = components.get(lane).size();
+            Track track;
+
+            if (r.getX() > window.getWidth()/2) track = (Track) components.get(lane).get(laneSize - 2);
+            else track = (Track) components.get(lane).get(1);
+
+            train = new Train(track);
+            trains.add(train);
+            train.setDeparture(r.getId());
+
+            stationClickCount++;
+        }
+        else
+        {
+            train.setDestination(r.getId());
+            train.setDir(1);
+            trainCount++;
+            (new Thread(train, "Train " + String.valueOf(trainCount))).start();
+
+            stationClickCount = 0;
+        }
+    }
+
+    private void updateTrain(double x, double y)
     {
         if (trainRect == null)
         {
@@ -132,38 +162,6 @@ public class Display
         }
     }
 
-    private void initTrain(MouseEvent e)
-    {
-        Rectangle r = (Rectangle) e.getSource();
-
-        if (stationClickCount == 0)
-        {
-            int lane = Integer.parseInt((String) r.getUserData());
-            int laneSize = components.get(lane).size();
-            Track track;
-
-            if (r.getX() > window.getWidth()/2) track = (Track) components.get(lane).get(laneSize);
-            else track = (Track) components.get(lane).get(1);
-
-            train = new Train(track);
-            trains.add(train);
-            train.setDeparture(r.getId());
-        }
-
-        if (stationClickCount == 1)
-        {
-            train.setDestination(r.getId());
-            train.setDir(1);
-            trainCount++;
-            (new Thread(train, "Train " + String.valueOf(trainCount))).start();
-
-            stationClickCount = 0;
-        }
-
-        stationClickCount++;
-    }
-
-
     class Animation extends AnimationTimer
     {
         @Override
@@ -173,7 +171,7 @@ public class Display
             {
                 if (t != null)
                 {
-                    drawTrain(t.getCurrentTrack().getX(), t.getCurrentTrack().getY() - 15);
+                    updateTrain(t.getCurrentTrack().getX(), t.getCurrentTrack().getY() - 15);
                 }
             }
         }
