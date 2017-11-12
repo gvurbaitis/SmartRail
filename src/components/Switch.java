@@ -51,7 +51,15 @@ public class Switch extends Component
             // only check switch if it is the right type
             if ((type == 0 && dir == 1) || (type == 1 && dir == -1))
             {
-                getFlippedNeighbor().accept(getMsg());
+                // copy message to new instance and send it up/down a switch
+                Message msg = new Message();
+                msg.setValidPath(getMsg().isValidPath());
+                msg.setDestination(getMsg().getDestination());
+                msg.setDirection(getMsg().getDirection());
+                msg.setDepartureGroup(getMsg().getDepartureGroup());
+                msg.setTrainName(getMsg().getTrainName());
+
+                getFlippedNeighbor().accept(msg);
             }
         }
     }

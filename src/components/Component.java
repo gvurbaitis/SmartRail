@@ -59,6 +59,7 @@ public abstract class Component implements Runnable
     Message getMsg() { return msg; }
 
     void shutdown() { this.shutdown = true; }
+    public boolean isShutdown() { return this.shutdown; }
 
     public void setRight(Component right) { this.right = right; }
     public void setLeft(Component left) { this.left = left; }

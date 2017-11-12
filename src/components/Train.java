@@ -4,18 +4,19 @@ public class Train extends Component
 {
     private Track currentTrack;
     private String departure, destination;
+    private boolean isValidPath; // true when route is confirmed (used to spawn new train)
     private int dir; // -1 is left, 1 is right (not sure if needed just yet)
 
     public Train(Track currentTrack)
     {
         this.currentTrack = currentTrack;
+        isValidPath = false; // initially false
     }
 
     void update()
     {
         findRoute();
         justWait();
-        //System.out.println(getName() + " received a message and woke up!");
         if (isRouteConfirmed()) move();
         shutdown(); // temporarily for testing
         //System.exit(0); // for now when train reaches destination kill simulation
@@ -53,6 +54,7 @@ public class Train extends Component
     {
         Component neighbor;
         boolean shouldUnlock = false;
+        isValidPath = true; // when true add train to gui (in display class)
 
         System.out.println();
         System.out.println("moving...");
@@ -138,4 +140,6 @@ public class Train extends Component
     public String getDeparture() { return departure; }
 
     public void setDir(int dir) { this.dir = dir; }
+
+    public boolean isValidPath() { return isValidPath; }
 }

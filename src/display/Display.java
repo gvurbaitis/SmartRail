@@ -50,6 +50,7 @@ public class Display
         window.setResizable(false);
         window.sizeToScene();
         window.setScene(scene);
+        window.setOnCloseRequest(e -> System.exit(0));
         window.show();
     }
 
@@ -134,23 +135,24 @@ public class Display
             int laneSize = components.get(lane).size();
             Track track;
 
-            if (r.getX() > window.getWidth() / 2) track = (Track) components.get(lane).get(laneSize - 2);
+            if (r.getX() > window.getWidth()/5) track = (Track) components.get(lane).get(laneSize - 2);
             else track = (Track) components.get(lane).get(1);
 
             train = new Train(track);
-            trains.add(train);
             train.setDeparture(r.getId());
 
             stationClickCount++;
         }
         else
         {
-            if (r.getX() > window.getWidth()/2) train.setDir(1);
+            trainCount++;
+
+            if (r.getX() > window.getWidth()/5) train.setDir(1);
             else train.setDir(-1);
 
             ThreadGroup g = new ThreadGroup(train.getCurrentTrack().getGroup());
             train.setDestination(r.getId());
-            trainCount++;
+            trains.add(train);
             (new Thread(g, train, "Train " + String.valueOf(trainCount))).start();
 
             stationClickCount = 0;
@@ -159,7 +161,7 @@ public class Display
 
     private void updateTrain(double x, double y)
     {
-        if (trainRect == null)
+        if (!root.getChildren().contains(trainRect))
         {
             trainRect = new Rectangle(x, y, 50, 40);
             Image img = new Image("train.png", false);
@@ -184,8 +186,27 @@ public class Display
             {
                 if (t != null)
                 {
-                    updateTrain(t.getCurrentTrack().getX(), t.getCurrentTrack().getY() - 15);
+                    if (!t.isShutdown())
+                    {
+                        if (t.isValidPath())
+                        {
+                            double x = t.getCurrentTrack().getX();
+                            double y = t.getCurrentTrack().getY() - 15;
+                            updateTrain(x, y);
+                        }
+                    }
+                    else root.getChildren().remove(trainRect);
                 }
+            }
+
+            removeShutdownTrains();
+        }
+
+        private void removeShutdownTrains()
+        {
+            for (int i = 0; i < trains.size(); i++)
+            {
+                if (trains.get(i).isShutdown()) trains.remove(trains.get(i));
             }
         }
     }
