@@ -27,6 +27,7 @@ public class Train extends Component
         msg.setDestination(destination);
         msg.setDirection(dir);
         msg.setTrainName(getName());
+        msg.setDepartureGroup(getGroup());
         currentTrack.setTrain(this);
 
         currentTrack.accept(msg);
@@ -133,6 +134,7 @@ public class Train extends Component
     public void setDestination(String destination) { this.destination = destination; }
 
     public void setDeparture(String departure) { this.departure = departure; }
+    public String getDeparture() { return departure; }
 
     public void setDir(int dir) { this.dir = dir; }
 }

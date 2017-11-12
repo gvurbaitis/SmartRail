@@ -26,13 +26,19 @@ public class Switch extends Component
         {
             if (getMsg().isValidPath())  // if valid path
             {
-                // flip switch and send message up/down the switch if the connecting switch is flipped
-                if (getFlippedNeighbor().isFlipped())
+                // if in the switch is in the same lane as departure
+                if (getGroup().equals(getMsg().getDepartureGroup()))
+                {
+                    flipped = false;
+                    getFlippedNeighbor().setFlipped(false);
+                    neighbor.accept(getMsg());
+                }
+                else // if switch is different lane then departure
                 {
                     flipped = true;
+                    getFlippedNeighbor().setFlipped(true);
                     getFlippedNeighbor().getNeighbor(dir).accept(getMsg());
                 }
-                else neighbor.accept(getMsg());
             }
         }
         else // send message both ways at the switch intersection
@@ -43,7 +49,6 @@ public class Switch extends Component
             // only check switch if it is the right type
             if ((type == 0 && dir == 1) || (type == 1 && dir == -1))
             {
-                flipped = true;
                 getFlippedNeighbor().accept(getMsg());
             }
         }

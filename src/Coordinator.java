@@ -30,13 +30,14 @@ class Coordinator
         initConfig();
         startThreads();
 
-        Train train = new Train((Track) components.get(1).get(1));
-        train.setDeparture("Station 3");
-        train.setDestination("Station 2");
-        train.setDir(1);
-        (new Thread(train, "Train 1")).start();
+        /*Train train = new Train((Track) components.get(1).get(components.get(1).size()-2));
+        train.setDeparture("Station 4");
+        train.setDestination("Station 1");
+        train.setDir(-1);
+        // thread group == lane number
+        (new Thread(new ThreadGroup("1"), train, "Train 1")).start();*/
 
-        //initDisplay(); // initialize the display config (everything except the train :D)
+        initDisplay(); // initialize the display config (everything except the train :D)
     }
 
     private void readConfigFile()

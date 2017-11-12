@@ -1,9 +1,6 @@
 package display;
 
-import components.Component;
-import components.Station;
-import components.Track;
-import components.Train;
+import components.*;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -61,6 +58,7 @@ public class Display
     {
         double x = 30;
         double y = 30;
+        int i = 0;
 
         for (List<Component> lane : components)
         {
@@ -73,6 +71,7 @@ public class Display
                     drawStation(x, y, c.getGroup(), c.getName());
                     x += 60;
                 }
+
                 if (c instanceof Track)
                 {
                     c.setX(x);
@@ -80,10 +79,21 @@ public class Display
                     drawTrack(x, y + 15);
                     x += 40;
                 }
+
+                if (c instanceof Switch)
+                {
+                    if (i == 0 || (i & 1) == 0)
+                    {
+                        c.setX(x);
+                        c.setY(y + 60);
+                        drawTrack(x, y + 60);
+                    }
+                }
             }
 
             x = 30;
             y += 90;
+            i++;
         }
 
         Animation animation = new Animation();
@@ -135,10 +145,13 @@ public class Display
         }
         else
         {
+            if (r.getX() > window.getWidth()/2) train.setDir(1);
+            else train.setDir(-1);
+
+            ThreadGroup g = new ThreadGroup(train.getCurrentTrack().getGroup());
             train.setDestination(r.getId());
-            train.setDir(1);
             trainCount++;
-            (new Thread(train, "Train " + String.valueOf(trainCount))).start();
+            (new Thread(g, train, "Train " + String.valueOf(trainCount))).start();
 
             stationClickCount = 0;
         }
