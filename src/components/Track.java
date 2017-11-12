@@ -23,17 +23,20 @@ public class Track extends Component
             if (train != null)
             {
                 train.accept(getMsg());
+                lock(); // lock the track that the train is on
             }
             else if (!getMsg().isValidPath()) // if not valid path unlock, else if valid path lock
             {
-                unlock();
                 neighbor.accept(getMsg());
             }
-            else neighbor.accept(getMsg());
+            else
+            {
+                lock(); // lock on the way back, when valid path
+                neighbor.accept(getMsg());
+            }
         }
         else // if the message is going to the destination station
         {
-            lock();
             neighbor.accept(getMsg());
         }
     }

@@ -26,6 +26,7 @@ public class Switch extends Component
         {
             if (getMsg().isValidPath())  // if valid path
             {
+                lock(); // lock this switch on the way back
                 // if in the switch is in the same lane as departure
                 if (getGroup().equals(getMsg().getDepartureGroup()))
                 {
@@ -36,6 +37,7 @@ public class Switch extends Component
                 else // if switch is different lane then departure
                 {
                     flipped = true;
+                    getFlippedNeighbor().lock(); // lock connected switch
                     getFlippedNeighbor().setFlipped(true);
                     getFlippedNeighbor().getNeighbor(dir).accept(getMsg());
                 }
@@ -43,7 +45,6 @@ public class Switch extends Component
         }
         else // send message both ways at the switch intersection
         {
-            lock(); // lock switch
             neighbor.accept(getMsg()); // keep sending the message straight
 
             // only check switch if it is the right type
