@@ -24,6 +24,7 @@ public class Switch extends Component
         // if the message is going back to the train
         if (destination.equals(getMsg().getTrainName()))
         {
+            System.out.println(getMsg().isValidPath());
             if (getMsg().isValidPath())  // if valid path
             {
                 lock(); // lock this switch on the way back

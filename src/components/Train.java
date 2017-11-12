@@ -18,7 +18,7 @@ public class Train extends Component
         //System.out.println(getName() + " received a message and woke up!");
         if (isRouteConfirmed()) move();
         shutdown(); // temporarily for testing
-        System.exit(0); // for now when train reaches destination kill simulation
+        //System.exit(0); // for now when train reaches destination kill simulation
     }
 
     private void findRoute()
@@ -26,6 +26,7 @@ public class Train extends Component
         Message msg = new Message();
         msg.setDestination(destination);
         msg.setDirection(dir);
+        msg.setValidPath(false); // false by default
         msg.setTrainName(getName());
         msg.setDepartureGroup(getGroup());
         currentTrack.setTrain(this);

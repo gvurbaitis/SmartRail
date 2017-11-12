@@ -10,10 +10,7 @@ public class Station extends Component
         System.out.println(getName() + " received message and woke up.");
 
         // if true then the correct station is found so, send confirmation to the train
-        if (processMessage())
-        {
-            sendConfirmation();
-        }
+        if (processMessage()) sendConfirmation();
     }
 
     private boolean processMessage()
@@ -25,11 +22,8 @@ public class Station extends Component
             System.out.println("Found " + destination + "!");
             System.out.println();
             getMsg().setValidPath(true);
+
             return true;
-        }
-        else
-        {
-            getMsg().setValidPath(false);
         }
 
         return false;
