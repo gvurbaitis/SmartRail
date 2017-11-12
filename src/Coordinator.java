@@ -13,15 +13,12 @@ class Coordinator
     private Stage window;
     private List<String> config;
     private List<List<Component>> components;
-    private List<Component> tracksSwitchesLights;
-    private Train train;
     private List<Thread> threads;
 
     Coordinator(Stage window)
     {
         this.window = window;
         config = new ArrayList<>();
-        tracksSwitchesLights = new ArrayList<>();
         components = new ArrayList<>();
         threads = new ArrayList<>();
     }
@@ -33,12 +30,11 @@ class Coordinator
         initConfig();
         startThreads();
 
-        Train train = new Train((Track) components.get(0).get(1));
-        train.setDeparture("Station 1");
-        train.setDestination("bottom station");
+        Train train = new Train((Track) components.get(1).get(1));
+        train.setDeparture("Station 3");
+        train.setDestination("Station 2");
         train.setDir(1);
         (new Thread(train, "Train 1")).start();
-        //initTracksSwitchesLights();
 
         //initDisplay(); // initialize the display config (everything except the train :D)
     }
@@ -57,8 +53,7 @@ class Coordinator
                 System.out.println(s);
             }
             sc.close();
-        }
-        catch (FileNotFoundException e)
+        } catch (FileNotFoundException e)
         {
             e.printStackTrace();
         }
@@ -104,22 +99,22 @@ class Coordinator
                     threads.add(new Thread(group, light, "Light " + String.valueOf(lightCount)));
                 }
 
-                if (c == 't')
+                if (c == 'R')
                 {
                     switchCount++;
-                    SwitchTop sw = new SwitchTop();
+                    Switch sw = new Switch();
+                    sw.setType(0);
                     lane.add(sw);
-                    //tracksSwitchesLights.add(sw);
-                    threads.add(new Thread(sw, "Switch " + String.valueOf(switchCount)));
+                    threads.add(new Thread(group, sw, "Switch " + String.valueOf(switchCount)));
                 }
 
-                if (c == 'b')
+                if (c == 'L')
                 {
                     switchCount++;
-                    SwitchBottom sw = new SwitchBottom();
+                    Switch sw = new Switch();
+                    sw.setType(1);
                     lane.add(sw);
-                    //tracksSwitchesLights.add(sw);
-                    threads.add(new Thread(sw, "Switch " + String.valueOf(switchCount)));
+                    threads.add(new Thread(group, sw, "SwitchLeft " + String.valueOf(switchCount)));
                 }
             }
             components.add(lane);
@@ -157,38 +152,37 @@ class Coordinator
                     current.setRight(right);
                 }
 
-                if(current instanceof SwitchTop)
+                if (current instanceof Switch)
                 {
-                    SwitchBottom sb = new SwitchBottom();
-                    Track bottom1 = new Track();
-                    Track bottom2 = new Track();
-                    Station bottomRightStation = new Station();
-                    threads.add(new Thread(bottom1, "bottom 1"));
-                    threads.add(new Thread(bottom2, "bottom 2"));
-                    threads.add(new Thread(bottomRightStation, "bottom station"));
-                    threads.add(new Thread(sb, "bottom switch"));
-
-                    current.setRight(right);
                     current.setLeft(left);
-                    ((SwitchTop) current).setUp(false);
-                    ((SwitchTop) current).setDownRight(sb);
+                    current.setRight(right);
 
-                    bottom1.setRight(bottom2);
-                    bottom1.setLeft(sb);
-                    bottom2.setLeft(bottom1);
-                    bottom2.setRight(bottomRightStation);
+                    Switch sw = (Switch) current;
+                    sw.setFlipped(false);
 
-                    bottomRightStation.setOriginator(bottom2);
-                    bottomRightStation.setLeft(bottom2);
-
-                    sb.setRight(bottom1);
-                    sb.setUpLeft(current);
-                    sb.setUp(true);
-                }
-
-                if (current instanceof SwitchBottom)
-                {
-                    // TBD
+                    // 0 type means switch connects to the RIGHT on a lane above or below
+                    if (sw.getType() == 0)
+                    {
+                        if (i == 0 || (i & 1) == 0)
+                        {
+                            sw.setFlippedNeighbor((Switch)components.get(i + 1).get(j + 1));
+                        }
+                        else
+                        {
+                            sw.setFlippedNeighbor((Switch)components.get(i - 1).get(j + 1));
+                        }
+                    }
+                    else // 1 type means switch connects to the LEFT on a lane above or below
+                    {
+                        if (i == 0 || (i & 1) == 0)
+                        {
+                            sw.setFlippedNeighbor((Switch)components.get(i + 1).get(j - 1));
+                        }
+                        else
+                        {
+                            sw.setFlippedNeighbor((Switch)components.get(i - 1).get(j - 1));
+                        }
+                    }
                 }
             }
         }
@@ -201,42 +195,11 @@ class Coordinator
         {
             current.setRight(right);
             ((Station) current).setOriginator((Track) right);
-        } else
+        }
+        else
         {
             current.setLeft(left);
             ((Station) current).setOriginator((Track) left);
-        }
-    }
-    private void initTracksSwitchesLights()
-    {
-        for (int i = 0; i < tracksSwitchesLights.size(); i++)
-        {
-            Component component = tracksSwitchesLights.get(i);
-
-            if(component instanceof SwitchTop)
-            {
-                SwitchBottom sb = new SwitchBottom();
-                Track track1 = new Track();
-                Track track2 = new Track();
-                Station station3 = new Station();
-
-                ((SwitchTop)component).setDownRight(sb);
-                sb.setUpLeft(component);
-                sb.setRight(track1);
-                sb.setUp(true);
-                track1.setLeft(sb);
-                track1.setRight(track2);
-                track2.setLeft(track1);
-                track2.setRight(station3);
-                station3.setOriginator(track2);
-                threads.add(new Thread(sb, "SwitchBottom " + 1));
-                threads.add(new Thread(track1, "Track " + 13));
-                threads.add(new Thread(track2, "Track " + 666));
-                threads.add(new Thread(station3, "Atlantis"));
-                System.out.println("Nik Rocks!");
-            }
-            if (component.getLeft() == null) component.setLeft(tracksSwitchesLights.get(i - 1));
-            if (component.getRight() == null) component.setRight(tracksSwitchesLights.get(i + 1));
         }
     }
 

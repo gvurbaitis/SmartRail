@@ -4,9 +4,9 @@ public class Light extends Component
 {
 
 
-  @Override
-  void update()
-  {
+    @Override
+    void update()
+    {
 
-  }
+    }
 }

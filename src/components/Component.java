@@ -5,10 +5,13 @@ public abstract class Component implements Runnable
     private Message msg;
     private String name;
     private String group;
+
     private Component right;
     private Component left;
+
     private boolean shutdown;
     private boolean lock;
+
     private double x, y;
 
     @Override
@@ -39,8 +42,7 @@ public abstract class Component implements Runnable
         {
             //System.out.println(getName() + " is waiting.");
             wait();
-        }
-        catch (InterruptedException e)
+        } catch (InterruptedException e)
         {
             e.printStackTrace();
         }
@@ -57,11 +59,8 @@ public abstract class Component implements Runnable
     Message getMsg() { return msg; }
 
     void shutdown() { this.shutdown = true; }
-    public boolean isShutdown() { return shutdown; }
 
-    public Component getRight() { return right; }
     public void setRight(Component right) { this.right = right; }
-    public Component getLeft() { return left; }
     public void setLeft(Component left) { this.left = left; }
 
     public double getX() { return x; }

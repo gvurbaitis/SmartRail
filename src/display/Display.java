@@ -124,7 +124,7 @@ public class Display
             int laneSize = components.get(lane).size();
             Track track;
 
-            if (r.getX() > window.getWidth()/2) track = (Track) components.get(lane).get(laneSize - 2);
+            if (r.getX() > window.getWidth() / 2) track = (Track) components.get(lane).get(laneSize - 2);
             else track = (Track) components.get(lane).get(1);
 
             train = new Train(track);

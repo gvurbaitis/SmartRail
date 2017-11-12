@@ -15,7 +15,8 @@ public class Train extends Component
     {
         findRoute();
         justWait();
-        move();
+        //System.out.println(getName() + " received a message and woke up!");
+        if (isRouteConfirmed()) move();
         shutdown(); // temporarily for testing
         System.exit(0); // for now when train reaches destination kill simulation
     }
@@ -48,110 +49,72 @@ public class Train extends Component
 
     private void move()
     {
+        Component neighbor;
         boolean shouldUnlock = false;
 
-        if (isRouteConfirmed())
+        System.out.println();
+        System.out.println("moving...");
+
+        while (true)
         {
-            Component neighbor;
+            System.out.println("On " + currentTrack.getName());
+            currentTrack.setTrain(null);
+            neighbor = currentTrack.getNeighbor(dir);
 
-            System.out.println();
-            System.out.println("moving...");
-
-            // temporary stop condition
-            while (true)
+            if (neighbor instanceof Station)
             {
-                System.out.println("On " + currentTrack.getName());
-                currentTrack.setTrain(null);
+                System.out.println("Arrived in " + currentTrack.getNeighbor(dir).getName());
+
+                // break once round trip is complete
+                if (neighbor.getName().equals(departure)) break;
+
+                dir *= -1;
                 neighbor = currentTrack.getNeighbor(dir);
+                shouldUnlock = true;
+            }
 
-                if (neighbor instanceof Station)
-                {
-                    System.out.println("Arrived in " + currentTrack.getNeighbor(dir).getName());
+            if (neighbor instanceof Track && currentTrack.isLock())
+            {
+                sleep();
+                if (shouldUnlock) currentTrack.unlock();
+                currentTrack = (Track) neighbor;
+                sleep();
+            }
 
-                    // break once round trip is complete
-                    if (neighbor.getName().equals(departure)) break;
-
-                    dir *= -1;
-                    shouldUnlock = true;
-                    neighbor = currentTrack.getNeighbor(dir);
-                }
-
-                if (currentTrack.isLock()
-                        && !(neighbor instanceof SwitchTop)
-                        && !(neighbor instanceof SwitchBottom))
-                {
-                    sleep();
-                    if (shouldUnlock) currentTrack.unlock();
-                    currentTrack = (Track) neighbor;
-                    sleep();
-                }
-
-                if (neighbor instanceof SwitchTop && neighbor.isLock())
-                {
-                    //System.out.println(dir);
-                    //System.out.println("Found: " + currentTrack.getNeighbor(dir).getName());
-                    if (((SwitchTop) neighbor).getUp() && dir == 1 || /*!((SwitchTop) neighbor).getUp() &&*/ dir == -1)
-                    {
-                        sleep();
-                        if (shouldUnlock)
-                        {
-                            neighbor.unlock();
-                            currentTrack.unlock();
-                        }
-                        currentTrack = (Track) neighbor.getNeighbor(dir);
-                        //System.out.println(currentTrack.getName());
-                        sleep();
-                    }
-                    else
-                    {
-                        sleep();
-
-                        if (shouldUnlock)
-                        {
-                            neighbor.unlock();
-                            ((SwitchTop) neighbor).getDownRight().unlock();
-                            currentTrack.unlock();
-                        }
-                        currentTrack = (Track) ((SwitchTop) neighbor).getDownRight().getNeighbor(dir);
-                        //System.out.println(currentTrack.getName());
-                        sleep();
-                    }
-                }
-                    if (neighbor instanceof SwitchBottom && neighbor.isLock())
-                    {
-                        //System.out.println(dir);
-                        //System.out.println("Found: " + currentTrack.getNeighbor(dir).getName());
-                        if (((SwitchBottom) neighbor).getUp() && dir == 1 || !((SwitchBottom) neighbor).getUp() && dir == -1)
-                        {
-                            sleep();
-                            if (shouldUnlock)
-                            {
-                                neighbor.unlock();
-                                currentTrack.unlock();
-                            }
-                            currentTrack = (Track) neighbor.getNeighbor(dir);
-                            //System.out.println(currentTrack.getName());
-                            sleep();
-                        } else
-                        {
-                            sleep();
-
-                            if (shouldUnlock)
-                            {
-                                neighbor.unlock();
-                                ((SwitchBottom) neighbor).getUpLeft().unlock();
-                                currentTrack.unlock();
-                            }
-
-                            currentTrack = (Track) ((SwitchBottom) neighbor).getUpLeft().getNeighbor(dir);
-                            //System.out.println(currentTrack.getName());
-                            sleep();
-                        }
-                    }
-
-
+            if (neighbor instanceof Switch)
+            {
+                if (neighbor.isLock()) processSwitches((Switch) neighbor, shouldUnlock);
             }
         }
+    }
+
+    private void processSwitches(Switch sw, boolean shouldUnlock)
+    {
+        System.out.println("On " + sw.getName());
+
+        sleep();
+        if (!sw.isFlipped()) // if switch is flat then don't travel along switch
+        {
+            if (shouldUnlock)
+            {
+                currentTrack.unlock();
+                sw.unlock();
+            }
+
+            currentTrack = (Track) sw.getNeighbor(dir);
+        }
+        else
+        {
+            if (shouldUnlock)
+            {
+                currentTrack.unlock();
+                sw.unlock();
+                sw.getFlippedNeighbor().unlock();
+            }
+
+            currentTrack = (Track) (sw.getFlippedNeighbor().getNeighbor(dir));
+        }
+        sleep();
     }
 
     private void sleep()
@@ -159,8 +122,7 @@ public class Train extends Component
         try
         {
             Thread.sleep(150);
-        }
-        catch (InterruptedException e)
+        } catch (InterruptedException e)
         {
             e.printStackTrace();
         }
@@ -169,6 +131,8 @@ public class Train extends Component
     public synchronized Track getCurrentTrack() { return currentTrack; }
 
     public void setDestination(String destination) { this.destination = destination; }
+
     public void setDeparture(String departure) { this.departure = departure; }
+
     public void setDir(int dir) { this.dir = dir; }
 }

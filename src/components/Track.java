@@ -7,8 +7,7 @@ public class Track extends Component
     void update()
     {
         justWait();
-        lock();
-        System.out.println(getName() + " received message and woke up.");
+        System.out.println(getName() + " received message and woke up." + " (" + isLock() + ")");
         processMessage();
     }
 
@@ -17,12 +16,24 @@ public class Track extends Component
         Component neighbor = getNeighbor(getMsg().getDirection());
         String destination = getMsg().getDestination();
 
-        if (train != null && destination.equals(getMsg().getTrainName()))
+        // if the message is going back to the train
+        if (destination.equals(getMsg().getTrainName()))
         {
-            train.accept(getMsg());
+            // if the message has reached the track that the train is on
+            if (train != null)
+            {
+                train.accept(getMsg());
+            }
+            else if (!getMsg().isValidPath()) // if not valid path unlock, else if valid path lock
+            {
+                unlock();
+                neighbor.accept(getMsg());
+            }
+            else neighbor.accept(getMsg());
         }
-        else
+        else // if the message is going to the destination station
         {
+            lock();
             neighbor.accept(getMsg());
         }
     }
