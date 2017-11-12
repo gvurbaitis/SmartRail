@@ -86,14 +86,14 @@ public class Display
                     if (i == 0 || (i & 1) == 0)
                     {
                         c.setX(x);
-                        c.setY(y + 60);
-                        drawTrack(x, y + 60);
+                        c.setY(y + 48);
+                        drawSwitch(((Switch) c).getType(), x, y + 48);
                     }
                 }
             }
 
             x = 30;
-            y += 90;
+            y += 63;
             i++;
         }
 
@@ -119,6 +119,20 @@ public class Display
     {
         Rectangle track = new Rectangle(x, y, 40, 30);
         Image img = new Image("track.png", false);
+        ImagePattern imagePattern = new ImagePattern(img);
+        track.setFill(imagePattern);
+
+        root.getChildren().add(track);
+    }
+
+    private void drawSwitch(int type, double x, double y)
+    {
+        Rectangle track = new Rectangle(x, y, 40, 30);
+        Image img;
+
+        if (type == 0) img = new Image("rswitch.png", false);
+        else img = new Image("lswitch.png", false);
+
         ImagePattern imagePattern = new ImagePattern(img);
         track.setFill(imagePattern);
 
