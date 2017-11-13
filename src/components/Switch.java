@@ -70,6 +70,6 @@ public class Switch extends Component
     public void setFlipped(boolean flipped) { this.flipped = flipped; }
     boolean isFlipped() { return flipped; }
 
-    Switch getFlippedNeighbor() { return flippedNeighbor; }
+    public Switch getFlippedNeighbor() { return flippedNeighbor; }
     public void setFlippedNeighbor(Switch flippedNeighbor) { this.flippedNeighbor = flippedNeighbor; }
 }

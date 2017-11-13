@@ -21,16 +21,19 @@ public class Display
     private Stage window;
     private Group root;
     private List<List<Component>> components;
+    private List<Switch> drawableSwitches; // only draw one part of switch
     private List<Train> trains;
-    private Train train;
+    private Train train; // current train (only one train in existence at a time)
     private Rectangle trainRect;
     private int trainCount = 0;
     private int stationClickCount = 0;
 
-    public Display(Stage window, List<List<Component>> components)
+    public Display(Stage window, List<List<Component>> components,
+                   List<Switch> drawableSwitches)
     {
         this.window = window;
         this.components = components;
+        this.drawableSwitches = drawableSwitches;
     }
 
     public void initialize()
@@ -83,7 +86,7 @@ public class Display
 
                 if (c instanceof Switch)
                 {
-                    if (i == 0 || (i & 1) == 0)
+                    if (drawableSwitches.contains(c))
                     {
                         c.setX(x);
                         c.setY(y + 48);

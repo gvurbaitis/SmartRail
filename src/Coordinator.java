@@ -13,6 +13,7 @@ class Coordinator
     private Stage window;
     private List<String> config;
     private List<List<Component>> components;
+    private List<Switch> drawableSwitches; // since switches have two parts only draw for one of them
     private List<Thread> threads;
 
     Coordinator(Stage window)
@@ -20,6 +21,7 @@ class Coordinator
         this.window = window;
         config = new ArrayList<>();
         components = new ArrayList<>();
+        drawableSwitches = new ArrayList<>();
         threads = new ArrayList<>();
     }
 
@@ -29,13 +31,6 @@ class Coordinator
         processConfigFile();
         initConfig();
         startThreads();
-
-        /*Train train = new Train((Track) components.get(1).get(components.get(1).size()-2));
-        train.setDeparture("Station 4");
-        train.setDestination("Station 1");
-        train.setDir(-1);
-        // thread group == lane number
-        (new Thread(new ThreadGroup("1"), train, "Train 1")).start();*/
 
         initDisplay(); // initialize the display config (everything except the train :D)
     }
@@ -155,35 +150,7 @@ class Coordinator
 
                 if (current instanceof Switch)
                 {
-                    current.setLeft(left);
-                    current.setRight(right);
-
-                    Switch sw = (Switch) current;
-                    sw.setFlipped(false);
-
-                    // 0 type means switch connects to the RIGHT on a lane above or below
-                    if (sw.getType() == 0)
-                    {
-                        if (i == 0 || (i & 1) == 0)
-                        {
-                            sw.setFlippedNeighbor((Switch)components.get(i + 1).get(j + 1));
-                        }
-                        else
-                        {
-                            sw.setFlippedNeighbor((Switch)components.get(i - 1).get(j + 1));
-                        }
-                    }
-                    else // 1 type means switch connects to the LEFT on a lane above or below
-                    {
-                        if (i == 0 || (i & 1) == 0)
-                        {
-                            sw.setFlippedNeighbor((Switch)components.get(i + 1).get(j - 1));
-                        }
-                        else
-                        {
-                            sw.setFlippedNeighbor((Switch)components.get(i - 1).get(j - 1));
-                        }
-                    }
+                    initSwitch(current, left, right, i, j);
                 }
             }
         }
@@ -204,9 +171,34 @@ class Coordinator
         }
     }
 
+    private void initSwitch(Component current, Component l, Component r, int i, int j)
+    {
+        Switch sw = (Switch) current;
+        sw.setFlipped(false);
+        sw.setLeft(l);
+        sw.setRight(r);
+
+        if (sw.getFlippedNeighbor() == null) // if the switched neighbor is not set yet
+        {
+            if (i == components.size() - 1) i--;
+            else i++;
+
+            // 0 type means switch connects to the RIGHT on a lane above or below
+            if (sw.getType() == 0) j++;
+            else j--;
+
+            // both switches give each other their references
+            Switch connection = (Switch) components.get(i).get(j);
+            sw.setFlippedNeighbor(connection);
+            connection.setFlippedNeighbor(sw);
+
+            drawableSwitches.add(sw);
+        }
+    }
+
     private void initDisplay()
     {
-        Display display = new Display(window, components);
+        Display display = new Display(window, components, drawableSwitches);
         display.initialize();
         display.drawConfig();
     }
