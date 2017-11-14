@@ -16,9 +16,18 @@ public class Train extends Component
     void update()
     {
         findRoute();
-        justWait();
+        //justWait();
+        try
+        {
+            synchronized (this) { wait(2000); }
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
         if (isRouteConfirmed()) move();
         shutdown(); // temporarily for testing
+        System.out.println(getName() + " is shutting down!");
         //System.exit(0); // for now when train reaches destination kill simulation
     }
 
@@ -101,8 +110,10 @@ public class Train extends Component
         {
             if (shouldUnlock)
             {
+                // unlock necessary components
                 currentTrack.unlock();
                 sw.unlock();
+                sw.getFlippedNeighbor().unlock();
             }
 
             currentTrack = (Track) sw.getNeighbor(dir);
@@ -111,9 +122,14 @@ public class Train extends Component
         {
             if (shouldUnlock)
             {
+                // unlock necessary components
                 currentTrack.unlock();
                 sw.unlock();
                 sw.getFlippedNeighbor().unlock();
+
+                // flip off switches on your way back to departure
+                sw.setFlipped(false);
+                sw.getFlippedNeighbor().setFlipped(false);
             }
 
             currentTrack = (Track) (sw.getFlippedNeighbor().getNeighbor(dir));
@@ -137,7 +153,6 @@ public class Train extends Component
     public void setDestination(String destination) { this.destination = destination; }
 
     public void setDeparture(String departure) { this.departure = departure; }
-    public String getDeparture() { return departure; }
 
     public void setDir(int dir) { this.dir = dir; }
 

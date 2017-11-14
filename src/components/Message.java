@@ -1,5 +1,8 @@
 package components;
 
+import java.util.ArrayList;
+import java.util.List;
+
 class Message
 {
     private int direction;
@@ -7,6 +10,13 @@ class Message
     private String trainName;
     private boolean isValidPath;
     private String departureGroup;
+    private List<String> takenSwitches = new ArrayList<>(); // switch that is taken to go to the current lane
+
+    void addTakenSwitch(String sw) { this.takenSwitches.add(sw); }
+    void removeLastTakenSwitch() { this.takenSwitches.remove(takenSwitches.size() - 1); }
+    String getLastTakenSwitch() { return takenSwitches.get(takenSwitches.size() - 1); }
+    List<String> getTakenSwitches() { return takenSwitches; }
+    void setTakenSwitches(List<String> takenSwitches) { this.takenSwitches.addAll(takenSwitches); }
 
     String getTrainName() { return trainName; }
     void setTrainName(String trainName) { this.trainName = trainName; }

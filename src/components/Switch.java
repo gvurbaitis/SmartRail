@@ -24,11 +24,11 @@ public class Switch extends Component
         // if the message is going back to the train
         if (destination.equals(getMsg().getTrainName()))
         {
-            System.out.println(getMsg().isValidPath());
             if (getMsg().isValidPath())  // if valid path
             {
                 lock(); // lock this switch on the way back
-                // if in the switch is in the same lane as departure
+
+                // if switch is in the same lane as departure
                 if (getGroup().equals(getMsg().getDepartureGroup()))
                 {
                     flipped = false;
@@ -37,10 +37,16 @@ public class Switch extends Component
                 }
                 else // if switch is different lane then departure
                 {
-                    flipped = true;
-                    getFlippedNeighbor().lock(); // lock connected switch
-                    getFlippedNeighbor().setFlipped(true);
-                    getFlippedNeighbor().getNeighbor(dir).accept(getMsg());
+                    // when message is returning to train only take the switch that you came from
+                    if (getName().equals(getMsg().getLastTakenSwitch()))
+                    {
+                        flipped = true;
+                        getMsg().removeLastTakenSwitch(); // remove switch from message list
+                        getFlippedNeighbor().lock(); // lock connected switch
+                        getFlippedNeighbor().setFlipped(true);
+                        getFlippedNeighbor().getNeighbor(dir).accept(getMsg());
+                    }
+                    else neighbor.accept(getMsg());
                 }
             }
         }
@@ -48,7 +54,7 @@ public class Switch extends Component
         {
             neighbor.accept(getMsg()); // keep sending the message straight
 
-            // only check switch if it is the right type
+            // only take switch if it is the right type
             if ((type == 0 && dir == 1) || (type == 1 && dir == -1))
             {
                 // copy message to new instance and send it up/down a switch
@@ -58,6 +64,10 @@ public class Switch extends Component
                 msg.setDirection(getMsg().getDirection());
                 msg.setDepartureGroup(getMsg().getDepartureGroup());
                 msg.setTrainName(getMsg().getTrainName());
+                msg.setTakenSwitches(getMsg().getTakenSwitches());
+
+                // add add the next switch to the list
+                msg.addTakenSwitch(getFlippedNeighbor().getName());
 
                 getFlippedNeighbor().accept(msg);
             }

@@ -162,11 +162,13 @@ class Coordinator
         if (stationCount == 0)
         {
             current.setRight(right);
+            ((Station) current).setSide(1);
             ((Station) current).setOriginator((Track) right);
         }
         else
         {
             current.setLeft(left);
+            ((Station) current).setSide(0);
             ((Station) current).setOriginator((Track) left);
         }
     }

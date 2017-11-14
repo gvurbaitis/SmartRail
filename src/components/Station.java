@@ -3,6 +3,7 @@ package components;
 public class Station extends Component
 {
     private Track originator; // the initial track connected to the station
+    private int side; // 0 == left side, 1 == right side
 
     void update()
     {
@@ -37,4 +38,7 @@ public class Station extends Component
     }
 
     public void setOriginator(Track originator) { this.originator = originator; }
+
+    public int getSide() { return side; }
+    public void setSide(int side) { this.side = side; }
 }
