@@ -64,9 +64,6 @@ public abstract class Component implements Runnable
     public void setRight(Component right) { this.right = right; }
     public void setLeft(Component left) { this.left = left; }
 
-    Component getLeft() { return left; }
-    Component getRight() { return right; }
-
     public double getX() { return x; }
     public void setX(double x) { this.x = x; }
     public double getY() { return y; }

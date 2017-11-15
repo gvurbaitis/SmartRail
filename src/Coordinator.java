@@ -148,6 +148,13 @@ class Coordinator
                     current.setRight(right);
                 }
 
+                if (current instanceof Light)
+                {
+                    current.setLeft(left);
+                    current.setRight(right);
+                    ((Light) current).setOn(false);
+                }
+
                 if (current instanceof Switch)
                 {
                     initSwitch(current, left, right, i, j);
