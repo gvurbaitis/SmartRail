@@ -170,6 +170,7 @@ public class Train extends Component
 
     public synchronized Track getCurrentTrack() { return currentTrack; }
 
+
     public void setDestination(String destination) { this.destination = destination; }
 
     public void setDeparture(String departure) { this.departure = departure; }

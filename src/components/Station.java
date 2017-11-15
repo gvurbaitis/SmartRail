@@ -3,7 +3,7 @@ package components;
 public class Station extends Component
 {
     private Track originator; // the initial track connected to the station
-    private int side; // 0 == left side, 1 == right side
+    private int type; // 0 == normal station, 1 == dead end
 
     void update()
     {
@@ -16,15 +16,19 @@ public class Station extends Component
 
     private boolean processMessage()
     {
-        String destination = getMsg().getDestination();
-
-        if (getName().equals(destination))
+        // only process message if not a dead end
+        if (type == 0)
         {
-            System.out.println("Found " + destination + "!");
-            System.out.println();
-            getMsg().setValidPath(true);
+            String destination = getMsg().getDestination();
 
-            return true;
+            if (getName().equals(destination))
+            {
+                System.out.println("Found " + destination + "!");
+                System.out.println();
+                getMsg().setValidPath(true);
+
+                return true;
+            }
         }
 
         return false;
@@ -38,7 +42,8 @@ public class Station extends Component
     }
 
     public void setOriginator(Track originator) { this.originator = originator; }
+    public Track getOriginator() { return originator; }
 
-    public int getSide() { return side; }
-    public void setSide(int side) { this.side = side; }
+    public int getType() { return type; }
+    public void setType(int type) { this.type = type; }
 }

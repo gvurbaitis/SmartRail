@@ -30,6 +30,14 @@ public class Display
     private int trainCount = 0;
     private int stationClickCount = 0;
 
+    // load all images only once
+    private Image stationImg = new Image("station.png", false);
+    private Image deadEndImg = new Image("dead_end.png", false);
+    private Image trackImg = new Image("track.png", false);
+    private Image leftSwitchImg = new Image("lswitch.png", false);
+    private Image rightSwitchImg = new Image("rswitch.png", false);
+    private Image trainImg = new Image("train.png", false);
+
     public Display(Stage window, List<List<Component>> components,
                    List<Switch> drawableSwitches)
     {
@@ -74,23 +82,23 @@ public class Display
                 {
                     c.setX(x);
                     c.setY(y);
-                    drawStation(x, y, c.getGroup(), c.getName());
-                    x += 60;
+                    drawStation((Station) c, x, y);
+                    x += 70;
                 }
 
                 if (c instanceof Track)
                 {
                     c.setX(x);
-                    c.setY(y + 30);
-                    drawTrack(x, y + 30);
+                    c.setY(y + 40);
+                    drawTrack(x, y + 40);
                     x += 40;
                 }
 
                 if (c instanceof Light)
                 {
                     c.setX(x);
-                    c.setY(y + 25);
-                    drawLight((Light) c, x, y + 25);
+                    c.setY(y + 35);
+                    drawLight((Light) c, x, y + 35);
                 }
 
                 if (c instanceof Switch)
@@ -103,23 +111,27 @@ public class Display
             }
 
             x = 30;
-            y += 70;
+            y += 80;
         }
 
         Animation animation = new Animation();
         animation.start();
     }
 
-    private void drawStation(double x, double y, String group, String name)
+    private void drawStation(Station s, double x, double y)
     {
-        Rectangle station = new Rectangle(x, y, 60, 60);
-        station.setId(name);
-        station.setUserData(group);
+        Rectangle station = new Rectangle(x, y, 70, 70);
+        ImagePattern imagePattern;
+        station.setUserData(s);
 
-        Image img = new Image("station.png", false);
-        ImagePattern imagePattern = new ImagePattern(img);
+        if (s.getType() == 0)
+        {
+            imagePattern = new ImagePattern(stationImg);
+            station.setOnMouseClicked(this::initTrain);
+        }
+        else imagePattern = new ImagePattern(deadEndImg);
+
         station.setFill(imagePattern);
-        station.setOnMouseClicked(this::initTrain);
 
         root.getChildren().add(station);
     }
@@ -127,8 +139,7 @@ public class Display
     private void drawTrack(double x, double y)
     {
         Rectangle track = new Rectangle(x, y, 40, 30);
-        Image img = new Image("track.png", false);
-        ImagePattern imagePattern = new ImagePattern(img);
+        ImagePattern imagePattern = new ImagePattern(trackImg);
         track.setFill(imagePattern);
 
         root.getChildren().add(track);
@@ -136,7 +147,7 @@ public class Display
 
     private void drawLight(Light l, double x, double y)
     {
-        Circle light = new Circle(x, y, 6);
+        Circle light = new Circle(x, y, 5);
         light.setUserData(l);
         light.setStrokeWidth(3);
         light.setStroke(Color.BLACK);
@@ -148,13 +159,12 @@ public class Display
 
     private void drawSwitch(int type, double x, double y)
     {
-        Rectangle sw = new Rectangle(x, y + 61, 40, 30);
-        Image img;
+        Rectangle sw = new Rectangle(x, y + 70, 40, 30);
+        ImagePattern imagePattern;
 
-        if (type == 0) img = new Image("rswitch.png", false);
-        else img = new Image("lswitch.png", false);
+        if (type == 0) imagePattern = new ImagePattern(rightSwitchImg);
+        else imagePattern = new ImagePattern(leftSwitchImg);
 
-        ImagePattern imagePattern = new ImagePattern(img);
         sw.setFill(imagePattern);
 
         root.getChildren().addAll(sw);
@@ -163,18 +173,15 @@ public class Display
     private void initTrain(MouseEvent e)
     {
         Rectangle r = (Rectangle) e.getSource();
+        Station s = ((Station) r.getUserData());
 
         if (stationClickCount == 0)
         {
-            int lane = Integer.parseInt((String) r.getUserData());
-            int laneSize = components.get(lane).size();
-            Track track;
+            train = new Train(s.getOriginator());
+            train.setDeparture(s.getName());
 
-            if (r.getX() > window.getWidth()/5) track = (Track) components.get(lane).get(laneSize - 2);
-            else track = (Track) components.get(lane).get(1);
-
-            train = new Train(track);
-            train.setDeparture(r.getId());
+            if (s.getLeft() == null) train.setDir(1);
+            else train.setDir(-1);
 
             stationClickCount++;
         }
@@ -182,11 +189,8 @@ public class Display
         {
             trainCount++;
 
-            if (r.getX() > window.getWidth()/5) train.setDir(1);
-            else train.setDir(-1);
-
             ThreadGroup g = new ThreadGroup(train.getCurrentTrack().getGroup());
-            train.setDestination(r.getId());
+            train.setDestination(s.getName());
             trains.add(train);
             (new Thread(g, train, "Train " + String.valueOf(trainCount))).start();
 
@@ -199,14 +203,16 @@ public class Display
         if (!root.getChildren().contains(trainRect))
         {
             trainRect = new Rectangle(x, y, 50, 40);
-            Image img = new Image("train.png", false);
-            ImagePattern imagePattern = new ImagePattern(img);
+            ImagePattern imagePattern = new ImagePattern(trainImg);
             trainRect.setFill(imagePattern);
 
             root.getChildren().add(trainRect);
         }
         else
         {
+            if (dir == 1) trainRect.setScaleX(1);
+            else trainRect.setScaleX(-1);
+
             trainRect.setX(x);
             trainRect.setY(y);
         }

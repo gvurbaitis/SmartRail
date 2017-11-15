@@ -71,10 +71,15 @@ class Coordinator
 
             for (char c : s.toCharArray())
             {
-                if (c == 'S')
+                if (c == 'S' || c == 'D')
                 {
                     stationCount++;
                     Station station = new Station();
+
+                    // if type 0 then normal station else dead end
+                    if (c == 'S') station.setType(0);
+                    else station.setType(1);
+
                     lane.add(station);
                     threads.add(new Thread(group, station, "Station " + String.valueOf(stationCount)));
                 }
@@ -169,13 +174,11 @@ class Coordinator
         if (stationCount == 0)
         {
             current.setRight(right);
-            ((Station) current).setSide(1);
             ((Station) current).setOriginator((Track) right);
         }
         else
         {
             current.setLeft(left);
-            ((Station) current).setSide(0);
             ((Station) current).setOriginator((Track) left);
         }
     }
