@@ -46,17 +46,21 @@ public class Train extends Component
 
     private boolean isRouteConfirmed()
     {
-        if (getMsg().isValidPath())
+        if (getMsg() != null)
         {
-            System.out.println(getName() + " received confirmation!");
-            return true;
+            if (getMsg().isValidPath())
+            {
+                System.out.println(getName() + " received confirmation!");
+                return true;
+            }
+            else
+            {
+                System.out.println(getName() + " shutting down...");
+                shutdown();
+                return false;
+            }
         }
-        else
-        {
-            System.out.println(getName() + " shutting down...");
-            shutdown();
-            return false;
-        }
+        return false;
     }
 
     private void move()
@@ -91,6 +95,22 @@ public class Train extends Component
                 sleep();
                 if (shouldUnlock) currentTrack.unlock();
                 currentTrack = (Track) neighbor;
+                sleep();
+            }
+
+            if (neighbor instanceof Light)
+            {
+                while (!((Light) neighbor).isOn()) // wait until condition is met
+
+                sleep();
+                if (shouldUnlock)
+                {
+                    currentTrack.unlock();
+                    neighbor.unlock();
+                    ((Light) neighbor).setOn(false);
+                }
+
+                currentTrack = (Track) neighbor.getNeighbor(dir);
                 sleep();
             }
 
@@ -155,6 +175,7 @@ public class Train extends Component
     public void setDeparture(String departure) { this.departure = departure; }
 
     public void setDir(int dir) { this.dir = dir; }
+    public int getDir() { return dir; }
 
     public boolean isValidPath() { return isValidPath; }
 }

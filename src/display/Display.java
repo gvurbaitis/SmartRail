@@ -10,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.scene.shape.Rectangle;
 
@@ -22,6 +23,7 @@ public class Display
     private Group root;
     private List<List<Component>> components;
     private List<Switch> drawableSwitches; // only draw one part of switch
+    private List<Circle> lights; // circle objects representing lights
     private List<Train> trains;
     private Train train; // current train (only one train in existence at a time)
     private Rectangle trainRect;
@@ -38,17 +40,18 @@ public class Display
 
     public void initialize()
     {
-        Canvas canvas = new Canvas(600, 500);
+        Canvas canvas = new Canvas(800, 700);
         GraphicsContext gtx = canvas.getGraphicsContext2D();
         gtx.setFill(Color.WHITE);
-        gtx.fillRect(0, 0, 600, 500);
+        gtx.fillRect(0, 0, 800, 700);
 
         trains = new ArrayList<>();
+        lights = new ArrayList<>();
 
         root = new Group();
         root.getChildren().add(canvas);
 
-        Scene scene = new Scene(root, 600, 500);
+        Scene scene = new Scene(root, 800, 700);
         window.setTitle("Train Simulation");
         window.setResizable(false);
         window.sizeToScene();
@@ -62,7 +65,6 @@ public class Display
     {
         double x = 30;
         double y = 30;
-        int i = 0;
 
         for (List<Component> lane : components)
         {
@@ -79,25 +81,29 @@ public class Display
                 if (c instanceof Track)
                 {
                     c.setX(x);
-                    c.setY(y + 15);
-                    drawTrack(x, y + 15);
+                    c.setY(y + 30);
+                    drawTrack(x, y + 30);
                     x += 40;
+                }
+
+                if (c instanceof Light)
+                {
+                    c.setX(x);
+                    c.setY(y + 25);
+                    drawLight((Light) c, x, y + 25);
                 }
 
                 if (c instanceof Switch)
                 {
                     if (drawableSwitches.contains(c))
                     {
-                        c.setX(x);
-                        c.setY(y + 48);
-                        drawSwitch(((Switch) c).getType(), x, y + 48);
+                        drawSwitch(((Switch) c).getType(), x, y);
                     }
                 }
             }
 
             x = 30;
-            y += 63;
-            i++;
+            y += 70;
         }
 
         Animation animation = new Animation();
@@ -128,18 +134,30 @@ public class Display
         root.getChildren().add(track);
     }
 
+    private void drawLight(Light l, double x, double y)
+    {
+        Circle light = new Circle(x, y, 6);
+        light.setUserData(l);
+        light.setStrokeWidth(3);
+        light.setStroke(Color.BLACK);
+        light.setFill(Color.RED);
+        lights.add(light);
+
+        root.getChildren().add(light);
+    }
+
     private void drawSwitch(int type, double x, double y)
     {
-        Rectangle track = new Rectangle(x, y, 40, 30);
+        Rectangle sw = new Rectangle(x, y + 61, 40, 30);
         Image img;
 
         if (type == 0) img = new Image("rswitch.png", false);
         else img = new Image("lswitch.png", false);
 
         ImagePattern imagePattern = new ImagePattern(img);
-        track.setFill(imagePattern);
+        sw.setFill(imagePattern);
 
-        root.getChildren().add(track);
+        root.getChildren().addAll(sw);
     }
 
     private void initTrain(MouseEvent e)
@@ -176,7 +194,7 @@ public class Display
         }
     }
 
-    private void updateTrain(double x, double y)
+    private void updateTrain(double x, double y, int dir)
     {
         if (!root.getChildren().contains(trainRect))
         {
@@ -199,6 +217,13 @@ public class Display
         @Override
         public void handle(long now)
         {
+            updateTrains();
+            updateLights();
+            removeShutdownTrains();
+        }
+
+        private void updateTrains()
+        {
             for (Train t : trains)
             {
                 if (t != null)
@@ -209,14 +234,12 @@ public class Display
                         {
                             double x = t.getCurrentTrack().getX();
                             double y = t.getCurrentTrack().getY() - 15;
-                            updateTrain(x, y);
+                            updateTrain(x, y, t.getDir());
                         }
                     }
                     else root.getChildren().remove(trainRect);
                 }
             }
-
-            removeShutdownTrains();
         }
 
         private void removeShutdownTrains()
@@ -224,6 +247,21 @@ public class Display
             for (int i = 0; i < trains.size(); i++)
             {
                 if (trains.get(i).isShutdown()) trains.remove(trains.get(i));
+            }
+        }
+
+        private void updateLights()
+        {
+            for (Circle light: lights)
+            {
+                if (light != null)
+                {
+                    if (((Light) light.getUserData()).isOn())
+                    {
+                        light.setFill(Color.GREEN);
+                    }
+                    else light.setFill(Color.RED);
+                }
             }
         }
     }
