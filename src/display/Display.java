@@ -81,25 +81,23 @@ public class Display
                 if (c instanceof Track)
                 {
                     c.setX(x);
-                    c.setY(y + 15);
-                    drawTrack(x, y + 15);
+                    c.setY(y + 30);
+                    drawTrack(x, y + 30);
                     x += 40;
                 }
 
                 if (c instanceof Light)
                 {
                     c.setX(x);
-                    c.setY(y + 5);
-                    drawLight((Light) c, x, y + 5);
+                    c.setY(y + 25);
+                    drawLight((Light) c, x, y + 25);
                 }
 
                 if (c instanceof Switch)
                 {
                     if (drawableSwitches.contains(c))
                     {
-                        c.setX(x);
-                        c.setY(y + 48);
-                        drawSwitch(((Switch) c).getType(), x, y + 48);
+                        drawSwitch(((Switch) c).getType(), x, y);
                     }
                 }
             }
@@ -150,16 +148,16 @@ public class Display
 
     private void drawSwitch(int type, double x, double y)
     {
-        Rectangle track = new Rectangle(x, y, 40, 30);
+        Rectangle sw = new Rectangle(x, y + 61, 40, 30);
         Image img;
 
         if (type == 0) img = new Image("rswitch.png", false);
         else img = new Image("lswitch.png", false);
 
         ImagePattern imagePattern = new ImagePattern(img);
-        track.setFill(imagePattern);
+        sw.setFill(imagePattern);
 
-        root.getChildren().add(track);
+        root.getChildren().addAll(sw);
     }
 
     private void initTrain(MouseEvent e)
