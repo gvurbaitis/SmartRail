@@ -1,7 +1,5 @@
 package components;
 
-import static java.lang.Thread.sleep;
-
 public class Light extends Component
 {
     private boolean on; // true == green light else red light
