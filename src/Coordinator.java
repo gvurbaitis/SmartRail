@@ -39,7 +39,7 @@ class Coordinator
     {
         try
         {
-            File file = new File("resources/config");
+            File file = new File("resources/config1");
             Scanner sc = new Scanner(file);
 
             while (sc.hasNextLine())

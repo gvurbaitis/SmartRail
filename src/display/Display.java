@@ -48,16 +48,10 @@ public class Display
 
     public void initialize()
     {
-        Canvas canvas = new Canvas(800, 700);
-        GraphicsContext gtx = canvas.getGraphicsContext2D();
-        gtx.setFill(Color.WHITE);
-        gtx.fillRect(0, 0, 800, 700);
-
+        root = new Group();
         trains = new ArrayList<>();
         lights = new ArrayList<>();
-
-        root = new Group();
-        root.getChildren().add(canvas);
+        drawBackground();
 
         Scene scene = new Scene(root, 800, 700);
         window.setTitle("Train Simulation");
@@ -68,6 +62,14 @@ public class Display
         window.show();
     }
 
+    private void drawBackground()
+    {
+        Rectangle background = new Rectangle(0, 0, 800, 700);
+        ImagePattern imagePattern = new ImagePattern(new Image("background.png"));
+        background.setFill(imagePattern);
+
+        root.getChildren().add(background);
+    }
 
     public void drawConfig()
     {
@@ -80,8 +82,6 @@ public class Display
             {
                 if (c instanceof Station)
                 {
-                    c.setX(x);
-                    c.setY(y);
                     drawStation((Station) c, x, y);
                     x += 70;
                 }
@@ -96,9 +96,7 @@ public class Display
 
                 if (c instanceof Light)
                 {
-                    c.setX(x);
-                    c.setY(y + 35);
-                    drawLight((Light) c, x, y + 35);
+                    drawLight((Light) c, x, y + 55);
                 }
 
                 if (c instanceof Switch)
@@ -159,7 +157,7 @@ public class Display
 
     private void drawSwitch(int type, double x, double y)
     {
-        Rectangle sw = new Rectangle(x, y + 70, 40, 30);
+        Rectangle sw = new Rectangle(x, y + 70, 40, 50);
         ImagePattern imagePattern;
 
         if (type == 0) imagePattern = new ImagePattern(rightSwitchImg);
