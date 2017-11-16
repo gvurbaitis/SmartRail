@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Reads config file, creates all objects, starts threads and begins display
+ */
 public class Coordinator
 {
     private Stage window;
@@ -19,6 +22,11 @@ public class Coordinator
     private List<Switch> drawableSwitches; // since switches have two parts only draw for one of them
     private List<Thread> threads;
 
+    /**
+     * Sets global variables, instantiates lists
+     * @param window main window object
+     * @param configFile string object from the main menu
+     */
     public Coordinator(Stage window, String configFile)
     {
         this.window = window;
@@ -29,6 +37,9 @@ public class Coordinator
         threads = new ArrayList<>();
     }
 
+    /**
+     * Calls all methods involved in reading the file and making all the objects
+     */
     public void initSimulation()
     {
         readConfigFile();
@@ -39,6 +50,9 @@ public class Coordinator
         initDisplay(); // initialize the main.display config (everything except the train :D)
     }
 
+    /**
+     * Reads designated config file and saves it to a list of strings
+     */
     private void readConfigFile()
     {
         try
@@ -59,6 +73,12 @@ public class Coordinator
         }
     }
 
+    /**
+     * Iterates through the list created by the readConfigFile()
+     * method and creates the appropriate objects adn adds them to the
+     * components list. Creates necessary threads and adds them to the
+     * threads list.
+     */
     private void processConfigFile()
     {
         int groupCount = 0;
@@ -127,6 +147,10 @@ public class Coordinator
         }
     }
 
+    /**
+     * Iterates through the components list and gives all objects the
+     * references to their neighbors.
+     */
     private void initConfig()
     {
         Component current, left, right;
@@ -173,6 +197,13 @@ public class Coordinator
     }
 
 
+    /**
+     * Gives the station object its references
+     * @param stationCount 0 == left station, else right station
+     * @param current the current station
+     * @param left the left neighbor
+     * @param right the right neighbor
+     */
     private void initStation(int stationCount, Component current, Component left, Component right)
     {
         if (stationCount == 0)
@@ -187,6 +218,14 @@ public class Coordinator
         }
     }
 
+    /**
+     * Gives the switches their neighbor references
+     * @param current the current switch
+     * @param l left neighbor
+     * @param r right neighbor
+     * @param i current lane
+     * @param j current column
+     */
     private void initSwitch(Component current, Component l, Component r, int i, int j)
     {
         Switch sw = (Switch) current;
@@ -212,12 +251,22 @@ public class Coordinator
         }
     }
 
+    /**
+     * Starts the display and passes it the main window object,
+     * the components list and the subset of the switches that should
+     * be drawn.
+     */
     private void initDisplay()
     {
         Display display = new Display(window, components, drawableSwitches);
         display.initialize();
     }
 
+    /**
+     * Iterate through the threads list and starts all the threads,
+     * excluding the train thread which is dynamically created in the
+     * display class.
+     */
     private void startThreads()
     {
         for (Thread t : threads)

@@ -13,16 +13,29 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
+/**
+ * Creates the main menu gui screen. Allows user to select
+ * a configuration file and start up the simulation.
+ */
 public class MainMenu
 {
     private Stage window;
     private Group root;
 
+    /**
+     * Sets the global variables
+     * @param window the main window
+     */
     public MainMenu(Stage window)
     {
         this.window = window;
     }
 
+    /**
+     * Creates all the gui elements, adds them to a group,
+     * and displays them on the window. Kills all threads on
+     * exit of the gui.
+     */
     public void initialize()
     {
         root = new Group();
@@ -39,6 +52,9 @@ public class MainMenu
         window.show();
     }
 
+    /**
+     * Loads the background image and displays it
+     */
     private void drawBackground()
     {
         Rectangle background = new Rectangle(0, 0, 800, 700);
@@ -48,14 +64,18 @@ public class MainMenu
         root.getChildren().add(background);
     }
 
+    /**
+     * Creates a combo box button that allows user to choose from one of 4
+     * pre-configured files.
+     */
     private void createButton()
     {
         ObservableList<String> options =
                 FXCollections.observableArrayList(
-                        "   Config1",
-                        "   Config2",
-                        "   Config3",
-                        "  Config_TA"
+                        "   config1",
+                        "   config2",
+                        "   config3",
+                        "  config_TA"
                 );
 
         ComboBox<String> cb = new ComboBox<>(options);
@@ -72,12 +92,20 @@ public class MainMenu
         root.getChildren().add(cb);
     }
 
+    /**
+     * When a configuration file is selected, load and start the simulation.
+     * Creates and initializes coordinator object.
+     * @param configFile the name of the config file to be loaded
+     */
     private void playAction(String configFile)
     {
         Coordinator coordinator = new Coordinator(window, configFile);
         coordinator.initSimulation();
     }
 
+    /**
+     * Adds the title image to the gui.
+     */
     private void addTittle()
     {
         Image img = new Image("title.png");

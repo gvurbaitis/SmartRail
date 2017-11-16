@@ -19,6 +19,10 @@ import main.components.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Main simulation display. Creates all the gui elements and
+ * implements an animation timer to update the lights and the train.
+ */
 public class Display
 {
     private Group root;
@@ -40,6 +44,12 @@ public class Display
     private Image rightSwitchImg = new Image("rswitch.png", false);
     private Image trainImg = new Image("train.png", false);
 
+    /**
+     * Constructor to set global variables
+     * @param window main window object
+     * @param components list of all components to be displayed
+     * @param drawableSwitches list of a subset of switches to be displayed
+     */
     public Display(Stage window, List<List<Component>> components,
                    List<Switch> drawableSwitches)
     {
@@ -48,6 +58,9 @@ public class Display
         this.drawableSwitches = drawableSwitches;
     }
 
+    /**
+     * Creates a new scene and draws the initial configuration to the gui.
+     */
     public void initialize()
     {
         root = new Group();
@@ -64,6 +77,9 @@ public class Display
         window.show();
     }
 
+    /**
+     * Loads the background once and displays it
+     */
     private void drawBackground()
     {
         Canvas canvas = new Canvas(800, 700);
@@ -75,6 +91,11 @@ public class Display
         root.getChildren().add(canvas);
     }
 
+    /**
+     * Iterates through the components list and draws the appropriate
+     * images based on the type of component. Starts the animation timer
+     * once everything is displayed.
+     */
     private void drawConfig()
     {
         double x = 30;
@@ -120,6 +141,12 @@ public class Display
         animation.start();
     }
 
+    /**
+     * Draws the station image to the display
+     * @param s reference to the station object
+     * @param x the x location
+     * @param y the y location
+     */
     private void drawStation(Station s, double x, double y)
     {
         Rectangle station = new Rectangle(x, y, 70, 70);
@@ -139,6 +166,11 @@ public class Display
         root.getChildren().add(station);
     }
 
+    /**
+     * Draws track image to the display
+     * @param x the x location
+     * @param y the y location
+     */
     private void drawTrack(double x, double y)
     {
         Rectangle track = new Rectangle(x, y, 40, 30);
@@ -148,6 +180,12 @@ public class Display
         root.getChildren().add(track);
     }
 
+    /**
+     * Draws a circle (default red light) the the display
+     * @param l a reference to the light object
+     * @param x the x location
+     * @param y the y location
+     */
     private void drawLight(Light l, double x, double y)
     {
         Circle light = new Circle(x, y, 5);
@@ -160,6 +198,13 @@ public class Display
         root.getChildren().add(light);
     }
 
+    /**
+     * Draws the appropriate switch based on its type.
+     * Type 0 is a right switch else left switch
+     * @param type the type of switch to draw
+     * @param x the x location
+     * @param y the y location
+     */
     private void drawSwitch(int type, double x, double y)
     {
         Rectangle sw = new Rectangle(x, y + 70, 40, 50);
@@ -173,6 +218,12 @@ public class Display
         root.getChildren().add(sw);
     }
 
+    /**
+     * Creates a new train and starts a new thread for the train.
+     * First, click determines departure station, second click
+     * determines destination station.
+     * @param e reference to the mouse event
+     */
     private void initTrain(MouseEvent e)
     {
         Rectangle r = (Rectangle) e.getSource();
@@ -201,6 +252,13 @@ public class Display
         }
     }
 
+    /**
+     * Called by the animation timer at 60Hz, updates the location trainRect
+     * object which represents our train.
+     * @param x the x location to update to
+     * @param y the y location to update to
+     * @param dir the direction to point the head of the train
+     */
     private void updateTrain(double x, double y, int dir)
     {
         if (!root.getChildren().contains(trainRect))
@@ -221,8 +279,18 @@ public class Display
         }
     }
 
+    /**
+     * Inner class that starts an Animation timer which updates at a
+     * rate of 60Hz.
+     */
     class Animation extends AnimationTimer
     {
+        /**
+         * Called by the animation timer to update at 60Hz. Updates the
+         * location of the train, updates the state of the lights, and
+         * removes all trains that have shutdown.
+         * @param now current time
+         */
         @Override
         public void handle(long now)
         {
@@ -231,6 +299,10 @@ public class Display
             removeShutdownTrains();
         }
 
+        /**
+         * Updates every train (only needs to work with one currently).
+         * Removes train image when train is shutdown.
+         */
         private void updateTrains()
         {
             for (Train t : trains)
@@ -251,6 +323,9 @@ public class Display
             }
         }
 
+        /**
+         * Removes all trains that have shutdown.
+         */
         private void removeShutdownTrains()
         {
             for (int i = 0; i < trains.size(); i++)
@@ -259,6 +334,10 @@ public class Display
             }
         }
 
+        /**
+         * Changes the color of the light ot green or red based on it's
+         * current state.
+         */
         private void updateLights()
         {
             for (Circle light : lights)
