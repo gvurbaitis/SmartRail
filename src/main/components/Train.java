@@ -1,4 +1,4 @@
-package components;
+package main.components;
 
 public class Train extends Component
 {
@@ -16,7 +16,8 @@ public class Train extends Component
     void update()
     {
         findRoute();
-        //justWait();
+
+        // wait for 2 seconds, if the message isn't back then there is no path
         try
         {
             synchronized (this) { wait(2000); }
@@ -25,10 +26,10 @@ public class Train extends Component
         {
             e.printStackTrace();
         }
+
+        // if there is a locked path then move
         if (isRouteConfirmed()) move();
-        shutdown(); // temporarily for testing
-        System.out.println(getName() + " is shutting down!");
-        //System.exit(0); // for now when train reaches destination kill simulation
+        shutdown(); // shutdown after move is complete
     }
 
     private void findRoute()
@@ -50,12 +51,10 @@ public class Train extends Component
         {
             if (getMsg().isValidPath())
             {
-                System.out.println(getName() + " received confirmation!");
                 return true;
             }
             else
             {
-                System.out.println(getName() + " shutting down...");
                 shutdown();
                 return false;
             }
@@ -67,21 +66,15 @@ public class Train extends Component
     {
         Component neighbor;
         boolean shouldUnlock = false;
-        isValidPath = true; // when true add train to gui (in display class)
-
-        System.out.println();
-        System.out.println("moving...");
+        isValidPath = true; // when true add train to gui (in main.display class)
 
         while (true)
         {
-            System.out.println("On " + currentTrack.getName());
             currentTrack.setTrain(null);
             neighbor = currentTrack.getNeighbor(dir);
 
             if (neighbor instanceof Station)
             {
-                System.out.println("Arrived in " + currentTrack.getNeighbor(dir).getName());
-
                 // break once round trip is complete
                 if (neighbor.getName().equals(departure)) break;
 
@@ -123,14 +116,12 @@ public class Train extends Component
 
     private void processSwitches(Switch sw, boolean shouldUnlock)
     {
-        System.out.println("On " + sw.getName());
-
         sleep();
         if (!sw.isFlipped()) // if switch is flat then don't travel along switch
         {
             if (shouldUnlock)
             {
-                // unlock necessary components
+                // unlock necessary main.components
                 currentTrack.unlock();
                 sw.unlock();
                 sw.getFlippedNeighbor().unlock();
@@ -142,7 +133,7 @@ public class Train extends Component
         {
             if (shouldUnlock)
             {
-                // unlock necessary components
+                // unlock necessary main.components
                 currentTrack.unlock();
                 sw.unlock();
                 sw.getFlippedNeighbor().unlock();

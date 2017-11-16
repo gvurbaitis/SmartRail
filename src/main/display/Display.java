@@ -1,26 +1,28 @@
-package display;
+package main.display;
 
-import components.*;
-import javafx.animation.AnimationTimer;
-import javafx.scene.Group;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.stage.Stage;
+import main.components.*;
+import javafx.animation.AnimationTimer;
+import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
-import javafx.stage.Stage;
 import javafx.scene.shape.Rectangle;
+import main.components.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Display
 {
-    private Stage window;
     private Group root;
+    private Stage window;
     private List<List<Component>> components;
     private List<Switch> drawableSwitches; // only draw one part of switch
     private List<Circle> lights; // circle objects representing lights
@@ -51,12 +53,12 @@ public class Display
         root = new Group();
         trains = new ArrayList<>();
         lights = new ArrayList<>();
+
         drawBackground();
+        drawConfig();
 
         Scene scene = new Scene(root, 800, 700);
-        window.setTitle("Train Simulation");
-        window.setResizable(false);
-        window.sizeToScene();
+        window.setTitle("Train Simulation - Simulation started...");
         window.setScene(scene);
         window.setOnCloseRequest(e -> System.exit(0));
         window.show();
@@ -64,14 +66,16 @@ public class Display
 
     private void drawBackground()
     {
-        Rectangle background = new Rectangle(0, 0, 800, 700);
+        Canvas canvas = new Canvas(800, 700);
+        GraphicsContext gtx = canvas.getGraphicsContext2D();
         ImagePattern imagePattern = new ImagePattern(new Image("background.png"));
-        background.setFill(imagePattern);
+        gtx.setFill(imagePattern);
+        gtx.fillRect(0, 0, 800, 700);
 
-        root.getChildren().add(background);
+        root.getChildren().add(canvas);
     }
 
-    public void drawConfig()
+    private void drawConfig()
     {
         double x = 30;
         double y = 30;
@@ -130,6 +134,7 @@ public class Display
         else imagePattern = new ImagePattern(deadEndImg);
 
         station.setFill(imagePattern);
+        station.setCursor(Cursor.HAND);
 
         root.getChildren().add(station);
     }
@@ -165,7 +170,7 @@ public class Display
 
         sw.setFill(imagePattern);
 
-        root.getChildren().addAll(sw);
+        root.getChildren().add(sw);
     }
 
     private void initTrain(MouseEvent e)

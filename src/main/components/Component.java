@@ -1,4 +1,4 @@
-package components;
+package main.components;
 
 public abstract class Component implements Runnable
 {
@@ -20,7 +20,6 @@ public abstract class Component implements Runnable
         shutdown = false;
         name = Thread.currentThread().getName();
         group = Thread.currentThread().getThreadGroup().getName();
-        //System.out.println(getName() + " has started!");
 
         while (!shutdown)
         {
@@ -40,9 +39,9 @@ public abstract class Component implements Runnable
     {
         try
         {
-            //System.out.println(getName() + " is waiting.");
             wait();
-        } catch (InterruptedException e)
+        }
+        catch (InterruptedException e)
         {
             e.printStackTrace();
         }
@@ -64,7 +63,6 @@ public abstract class Component implements Runnable
     public void setRight(Component right) { this.right = right; }
     public void setLeft(Component left) { this.left = left; }
 
-    public Component getRight() { return right; }
     public Component getLeft() { return left; }
 
     public double getX() { return x; }

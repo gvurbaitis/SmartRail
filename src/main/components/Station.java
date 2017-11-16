@@ -1,4 +1,4 @@
-package components;
+package main.components;
 
 public class Station extends Component
 {
@@ -8,7 +8,6 @@ public class Station extends Component
     void update()
     {
         justWait();
-        System.out.println(getName() + " received message and woke up.");
 
         // if true then the correct station is found so, send confirmation to the train
         if (processMessage()) sendConfirmation();
@@ -23,8 +22,6 @@ public class Station extends Component
 
             if (getName().equals(destination))
             {
-                System.out.println("Found " + destination + "!");
-                System.out.println();
                 getMsg().setValidPath(true);
 
                 return true;

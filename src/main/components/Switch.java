@@ -1,4 +1,4 @@
-package components;
+package main.components;
 
 public class Switch extends Component
 {
@@ -11,7 +11,6 @@ public class Switch extends Component
     void update()
     {
         justWait();
-        System.out.println(getName() + " received message and woke up." + " (" + isLock() + ")");
         processMessage();
     }
 

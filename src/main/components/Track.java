@@ -1,15 +1,12 @@
-package components;
+package main.components;
 
-import static java.lang.Thread.sleep;
-
-public class Light extends Component
+public class Track extends Component
 {
-    private boolean on; // true == green light else red light
+    private Component train = null; // null when train is not on this track
 
     void update()
     {
         justWait();
-        System.out.println(getName() + " received message and woke up!");
         processMessage();
     }
 
@@ -21,15 +18,19 @@ public class Light extends Component
         // if the message is going back to the train
         if (destination.equals(getMsg().getTrainName()))
         {
-            // if not valid path unlock, else if valid path lock
-            if(!getMsg().isValidPath())
+            // if the message has reached the track that the train is on
+            if (train != null)
+            {
+                train.accept(getMsg());
+                lock(); // lock the track that the train is on
+            }
+            else if (!getMsg().isValidPath()) // if not valid path unlock, else if valid path lock
             {
                 neighbor.accept(getMsg());
             }
             else
             {
                 lock(); // lock on the way back, when valid path
-                on = true;
                 neighbor.accept(getMsg());
             }
         }
@@ -39,9 +40,5 @@ public class Light extends Component
         }
     }
 
-    public boolean isOn()
-    {
-        return on;
-    }
-    public void setOn(boolean on){ this.on = on; }
+    void setTrain(Component train) { this.train = train; }
 }

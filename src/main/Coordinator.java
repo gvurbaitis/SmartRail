@@ -1,5 +1,7 @@
-import components.*;
-import display.Display;
+package main;
+
+import main.components.*;
+import main.display.Display;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -8,45 +10,46 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-class Coordinator
+public class Coordinator
 {
     private Stage window;
+    private String configFile;
     private List<String> config;
     private List<List<Component>> components;
     private List<Switch> drawableSwitches; // since switches have two parts only draw for one of them
     private List<Thread> threads;
 
-    Coordinator(Stage window)
+    public Coordinator(Stage window, String configFile)
     {
         this.window = window;
+        this.configFile = configFile;
         config = new ArrayList<>();
         components = new ArrayList<>();
         drawableSwitches = new ArrayList<>();
         threads = new ArrayList<>();
     }
 
-    void initSimulation()
+    public void initSimulation()
     {
         readConfigFile();
         processConfigFile();
         initConfig();
         startThreads();
 
-        initDisplay(); // initialize the display config (everything except the train :D)
+        initDisplay(); // initialize the main.display config (everything except the train :D)
     }
 
     private void readConfigFile()
     {
         try
         {
-            File file = new File("resources/config1");
+            File file = new File("resources/" + configFile);
             Scanner sc = new Scanner(file);
 
             while (sc.hasNextLine())
             {
                 String s = sc.nextLine();
                 config.add(s);
-                System.out.println(s);
             }
             sc.close();
         } catch (FileNotFoundException e)
@@ -212,7 +215,6 @@ class Coordinator
     {
         Display display = new Display(window, components, drawableSwitches);
         display.initialize();
-        display.drawConfig();
     }
 
     private void startThreads()
