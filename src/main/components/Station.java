@@ -2,15 +2,12 @@ package main.components;
 //***********************************
 // Gabriel Urbaitis, Akash Patel
 //
-// The Light Class performs much like
+// The Station Class is similar to
 // a track with similar message passing,
-// however it has an on field which is
-// invoked when a message has found a
-// secured path and is on its way back
-// to the Train. It may also be set back
-// to red with the public SetOn method
-// to allow the train to alter its state
-// when moving past it.
+// however it has one track which is
+// connected to it, called the originator
+// It also has a type, indicating whether
+// it is a normal station or a dead end.
 //***********************************
 public class Station extends Component
 {
@@ -107,7 +104,7 @@ public class Station extends Component
   }
   /**
    * Input: none
-   * Returns void int type, 0 for a normal
+   * Returns int type, 0 for a normal
    * station, 1 for a dead end
    * Gets the type of the station
    * to process whether it is

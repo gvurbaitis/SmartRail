@@ -15,7 +15,6 @@ package main.components;
 public class Light extends Component
 {
   private boolean on; // true == green light else red light
-
   /**
    * Input: None
    * Returns void
