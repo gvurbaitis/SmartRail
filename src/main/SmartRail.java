@@ -1,5 +1,8 @@
+package main;
+
 import javafx.application.Application;
 import javafx.stage.Stage;
+import main.display.MainMenu;
 
 public class SmartRail extends Application
 {
@@ -11,7 +14,7 @@ public class SmartRail extends Application
     @Override
     public void start(Stage primaryStage) throws Exception
     {
-        Coordinator coordinator = new Coordinator();
-        coordinator.initSimulation();
+        MainMenu mainMenu = new MainMenu(primaryStage);
+        mainMenu.initialize();
     }
 }
