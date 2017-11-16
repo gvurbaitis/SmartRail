@@ -39,8 +39,10 @@ public class Station extends Component
     }
 
     public void setOriginator(Track originator) { this.originator = originator; }
+
     public Track getOriginator() { return originator; }
 
     public int getType() { return type; }
+
     public void setType(int type) { this.type = type; }
 }

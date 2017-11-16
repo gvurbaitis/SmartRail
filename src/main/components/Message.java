@@ -24,6 +24,7 @@ class Message
     private boolean isValidPath;
     private String departureGroup;
     private List<String> takenSwitches = new ArrayList<>(); // switch that is taken to go to the current lane
+
     /**
      * Input: String sw, a switch
      * along the train's path
@@ -36,6 +37,7 @@ class Message
     {
         this.takenSwitches.add(sw);
     }
+
     /**
      * Input: none
      * Returns void
@@ -46,6 +48,7 @@ class Message
     {
         this.takenSwitches.remove(takenSwitches.size() - 1);
     }
+
     /**
      * Input: none
      * Returns String, the last
@@ -57,6 +60,7 @@ class Message
     {
         return takenSwitches.get(takenSwitches.size() - 1);
     }
+
     /**
      * Input: none
      * Returns List<String> takenSwitches
@@ -69,6 +73,7 @@ class Message
     {
         return takenSwitches;
     }
+
     /**
      * Input: List<String> takenSwitches
      * the switches in the path of the
@@ -81,6 +86,7 @@ class Message
     {
         this.takenSwitches.addAll(takenSwitches);
     }
+
     /**
      * Input: none
      * Returns String trainName, the
@@ -92,6 +98,7 @@ class Message
     {
         return trainName;
     }
+
     /**
      * Input: String trainName, the
      * name of the train
@@ -103,6 +110,7 @@ class Message
     {
         this.trainName = trainName;
     }
+
     /**
      * Input: none
      * Returns boolean isValidPath,
@@ -114,6 +122,7 @@ class Message
     {
         return isValidPath;
     }
+
     /**
      * Input: boolean isValidPath,
      * the validity of the chosen path
@@ -125,6 +134,7 @@ class Message
     {
         isValidPath = validPath;
     }
+
     /**
      * Input: none
      * Returns int direction, left or right
@@ -135,6 +145,7 @@ class Message
     {
         return direction;
     }
+
     /**
      * Input: int direction, left or right
      * Returns void
@@ -145,6 +156,7 @@ class Message
     {
         this.direction = direction;
     }
+
     /**
      * Input: none
      * Returns String destination, any
@@ -157,6 +169,7 @@ class Message
     {
         return destination;
     }
+
     /**
      * Input: String destination, any
      * of the station names
@@ -169,6 +182,7 @@ class Message
     {
         this.destination = destination;
     }
+
     /**
      * Input: none
      * Returns String departureGroup, any
@@ -180,6 +194,7 @@ class Message
     {
         return departureGroup;
     }
+
     /**
      * Input: String departureGroup, any
      * of the station names

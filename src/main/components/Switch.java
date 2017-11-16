@@ -74,11 +74,14 @@ public class Switch extends Component
     }
 
     public int getType() { return type; }
+
     public void setType(int type) { this.type = type; }
 
     public void setFlipped(boolean flipped) { this.flipped = flipped; }
+
     boolean isFlipped() { return flipped; }
 
     public Switch getFlippedNeighbor() { return flippedNeighbor; }
+
     public void setFlippedNeighbor(Switch flippedNeighbor) { this.flippedNeighbor = flippedNeighbor; }
 }

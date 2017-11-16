@@ -51,6 +51,7 @@ public abstract class Component implements Runnable
             update();
         }
     }
+
     /**
      * Input: None
      * Returns void
@@ -74,6 +75,7 @@ public abstract class Component implements Runnable
         this.msg = msg;
         notify();
     }
+
     /**
      * Input: None
      * Returns void
@@ -92,6 +94,7 @@ public abstract class Component implements Runnable
             e.printStackTrace();
         }
     }
+
     /**
      * Input: int direction, 1 = right,
      * -1 = left
@@ -117,8 +120,9 @@ public abstract class Component implements Runnable
      */
     public String getName()
     {
-      return this.name;
+        return this.name;
     }
+
     /**
      * Input: none
      * Returns String group, the group of the thread
@@ -128,8 +132,9 @@ public abstract class Component implements Runnable
      */
     public String getGroup()
     {
-      return this.group;
+        return this.group;
     }
+
     /**
      * Input: none
      * Returns Message msg, the last message passed
@@ -139,8 +144,9 @@ public abstract class Component implements Runnable
      */
     Message getMsg()
     {
-      return msg;
+        return msg;
     }
+
     /**
      * Input: none
      * Returns void
@@ -150,8 +156,9 @@ public abstract class Component implements Runnable
      */
     void shutdown()
     {
-      this.shutdown = true;
+        this.shutdown = true;
     }
+
     /**
      * Input: none
      * Returns boolean shutdown, whether the
@@ -160,8 +167,9 @@ public abstract class Component implements Runnable
      */
     public boolean isShutdown()
     {
-      return this.shutdown;
+        return this.shutdown;
     }
+
     /**
      * Input: Component Right
      * Returns void
@@ -170,8 +178,9 @@ public abstract class Component implements Runnable
      */
     public void setRight(Component right)
     {
-      this.right = right;
+        this.right = right;
     }
+
     /**
      * Input: Component Left
      * Returns void
@@ -180,7 +189,7 @@ public abstract class Component implements Runnable
      */
     public void setLeft(Component left)
     {
-      this.left = left;
+        this.left = left;
     }
 
     /**
@@ -192,7 +201,7 @@ public abstract class Component implements Runnable
      */
     public Component getLeft()
     {
-      return left;
+        return left;
     }
 
     /**

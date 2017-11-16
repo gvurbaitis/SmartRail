@@ -19,7 +19,7 @@ public class Light extends Component
         if (destination.equals(getMsg().getTrainName()))
         {
             // if not valid path unlock, else if valid path lock
-            if(!getMsg().isValidPath())
+            if (!getMsg().isValidPath())
             {
                 neighbor.accept(getMsg());
             }
@@ -40,5 +40,6 @@ public class Light extends Component
     {
         return on;
     }
-    public void setOn(boolean on){ this.on = on; }
+
+    public void setOn(boolean on) { this.on = on; }
 }

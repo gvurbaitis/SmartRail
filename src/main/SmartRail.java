@@ -14,7 +14,7 @@ public class SmartRail extends Application
     @Override
     public void start(Stage primaryStage) throws Exception
     {
-       MainMenu mainMenu = new MainMenu(primaryStage);
+        MainMenu mainMenu = new MainMenu(primaryStage);
         mainMenu.initialize();
     }
 }

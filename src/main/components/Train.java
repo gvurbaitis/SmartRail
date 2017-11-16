@@ -95,7 +95,7 @@ public class Train extends Component
             {
                 while (!((Light) neighbor).isOn()) // wait until condition is met
 
-                sleep();
+                    sleep();
                 if (shouldUnlock)
                 {
                     currentTrack.unlock();
@@ -153,7 +153,8 @@ public class Train extends Component
         try
         {
             Thread.sleep(150);
-        } catch (InterruptedException e)
+        }
+        catch (InterruptedException e)
         {
             e.printStackTrace();
         }
@@ -167,6 +168,7 @@ public class Train extends Component
     public void setDeparture(String departure) { this.departure = departure; }
 
     public void setDir(int dir) { this.dir = dir; }
+
     public int getDir() { return dir; }
 
     public boolean isValidPath() { return isValidPath; }

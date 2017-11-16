@@ -52,7 +52,8 @@ public class Coordinator
                 config.add(s);
             }
             sc.close();
-        } catch (FileNotFoundException e)
+        }
+        catch (FileNotFoundException e)
         {
             e.printStackTrace();
         }

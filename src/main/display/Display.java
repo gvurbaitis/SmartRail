@@ -261,7 +261,7 @@ public class Display
 
         private void updateLights()
         {
-            for (Circle light: lights)
+            for (Circle light : lights)
             {
                 if (light != null)
                 {
