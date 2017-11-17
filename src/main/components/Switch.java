@@ -129,22 +129,55 @@ public class Switch extends Component
   {
     this.type = type;
   }
-
+  /**
+   * Input: none
+   * Returns boolean flipped,
+   * the status of the switch
+   * Gets the flipped boolean
+   * indicating the switch connects
+   * to a different lane if true
+   * or false if it is connected to
+   * the same lane.
+   */
   boolean isFlipped()
   {
     return flipped;
   }
-
+  /**
+   * Input: boolean flipped,
+   * the status of the switch
+   * Returns void
+   * Sets the flipped boolean
+   * to true to indicate the switch
+   * connects to a different lane
+   * or false if it is connected to
+   * the same lane.
+   */
   public void setFlipped(boolean flipped)
   {
     this.flipped = flipped;
   }
-
+  /**
+   * Input: none
+   * Returns switch flippedNeighbor,
+   * the switch connected on the
+   * track on the other lane.
+   * Gets the switch on the other
+   * lane for when a train is
+   * about to switch lanes.
+   */
   public Switch getFlippedNeighbor()
   {
     return flippedNeighbor;
   }
-
+  /**
+   * Input: switch flippedNeighbor,
+   * the switch connected on the
+   * track on the other lane.
+   * Returns void
+   * Sets the switch that is connected
+   * to the current switch when flipped.
+   */
   public void setFlippedNeighbor(Switch flippedNeighbor)
   {
     this.flippedNeighbor = flippedNeighbor;
