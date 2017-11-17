@@ -24,6 +24,7 @@ public class MainMenu
 
     /**
      * Sets the global variables
+     *
      * @param window the main window
      */
     public MainMenu(Stage window)
@@ -95,6 +96,7 @@ public class MainMenu
     /**
      * When a configuration file is selected, load and start the simulation.
      * Creates and initializes coordinator object.
+     *
      * @param configFile the name of the config file to be loaded
      */
     private void playAction(String configFile)

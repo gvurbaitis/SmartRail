@@ -17,6 +17,7 @@ public class SmartRail extends Application
 
     /**
      * Method called by main thread to launch GUI
+     *
      * @param primaryStage main window object
      */
     @Override

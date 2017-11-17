@@ -24,7 +24,8 @@ public class Coordinator
 
     /**
      * Sets global variables, instantiates lists
-     * @param window main window object
+     *
+     * @param window     main window object
      * @param configFile string object from the main menu
      */
     public Coordinator(Stage window, String configFile)
@@ -199,10 +200,11 @@ public class Coordinator
 
     /**
      * Gives the station object its references
+     *
      * @param stationCount 0 == left station, else right station
-     * @param current the current station
-     * @param left the left neighbor
-     * @param right the right neighbor
+     * @param current      the current station
+     * @param left         the left neighbor
+     * @param right        the right neighbor
      */
     private void initStation(int stationCount, Component current, Component left, Component right)
     {
@@ -220,11 +222,12 @@ public class Coordinator
 
     /**
      * Gives the switches their neighbor references
+     *
      * @param current the current switch
-     * @param l left neighbor
-     * @param r right neighbor
-     * @param i current lane
-     * @param j current column
+     * @param l       left neighbor
+     * @param r       right neighbor
+     * @param i       current lane
+     * @param j       current column
      */
     private void initSwitch(Component current, Component l, Component r, int i, int j)
     {

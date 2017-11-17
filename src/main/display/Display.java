@@ -46,8 +46,9 @@ public class Display
 
     /**
      * Constructor to set global variables
-     * @param window main window object
-     * @param components list of all components to be displayed
+     *
+     * @param window           main window object
+     * @param components       list of all components to be displayed
      * @param drawableSwitches list of a subset of switches to be displayed
      */
     public Display(Stage window, List<List<Component>> components,
@@ -143,6 +144,7 @@ public class Display
 
     /**
      * Draws the station image to the display
+     *
      * @param s reference to the station object
      * @param x the x location
      * @param y the y location
@@ -168,6 +170,7 @@ public class Display
 
     /**
      * Draws track image to the display
+     *
      * @param x the x location
      * @param y the y location
      */
@@ -182,6 +185,7 @@ public class Display
 
     /**
      * Draws a circle (default red light) the the display
+     *
      * @param l a reference to the light object
      * @param x the x location
      * @param y the y location
@@ -201,9 +205,10 @@ public class Display
     /**
      * Draws the appropriate switch based on its type.
      * Type 0 is a right switch else left switch
+     *
      * @param type the type of switch to draw
-     * @param x the x location
-     * @param y the y location
+     * @param x    the x location
+     * @param y    the y location
      */
     private void drawSwitch(int type, double x, double y)
     {
@@ -222,6 +227,7 @@ public class Display
      * Creates a new train and starts a new thread for the train.
      * First, click determines departure station, second click
      * determines destination station.
+     *
      * @param e reference to the mouse event
      */
     private void initTrain(MouseEvent e)
@@ -255,8 +261,9 @@ public class Display
     /**
      * Called by the animation timer at 60Hz, updates the location trainRect
      * object which represents our train.
-     * @param x the x location to update to
-     * @param y the y location to update to
+     *
+     * @param x   the x location to update to
+     * @param y   the y location to update to
      * @param dir the direction to point the head of the train
      */
     private void updateTrain(double x, double y, int dir)
@@ -289,6 +296,7 @@ public class Display
          * Called by the animation timer to update at 60Hz. Updates the
          * location of the train, updates the state of the lights, and
          * removes all trains that have shutdown.
+         *
          * @param now current time
          */
         @Override
